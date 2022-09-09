@@ -1,13 +1,13 @@
-<<<<<<< HEAD
 <div align="center">
   <a href="https://www.pokt.network">
     <img src="https://user-images.githubusercontent.com/16605170/74199287-94f17680-4c18-11ea-9de2-b094fab91431.png" alt="Pocket Network logo" width="340"/>
   </a>
 </div>
 
-# Project Title
+# Pocket Operator
 
-One sentence summary of project
+Deploy and manage pocket nodes on Kubernetes.
+
 <div>
   <a  href="https://godoc.org/github.com/pokt-network/pocket-core"><img src="https://img.shields.io/badge/godoc-reference-blue.svg"/></a>
   <a  href="https://goreportcard.com/report/github.com/pokt-network/pocket-core"><img src="https://goreportcard.com/badge/github.com/pokt-network/pocket-core"/></a>
@@ -16,6 +16,7 @@ One sentence summary of project
 </div>
 
 ## Overview
+
 <div>
     <a  href="https://github.com/pokt-network/pocket-core/releases"><img src="https://img.shields.io/github/release-pre/pokt-network/pocket-core.svg"/></a>
     <a href="https://circleci.com/gh/pokt-network/pocket-core/tree/staging"><img src="https://circleci.com/gh/pokt-network/pocket-core/tree/staging.svg?style=svg"/></a>
@@ -27,46 +28,141 @@ One sentence summary of project
     <a href="https://github.com/pokt-network/pocket-core/issues"><img src="https://img.shields.io/github/issues-closed/pokt-network/pocket-core.svg"/></a>
 </div>
 
-Full Description
+The Pocket Operator extends the Kubernetes control plane to create, read, update
+and delete pocket nodes using custom resources.
 
-## Getting Started
+This operator was built with
+[operator-builder](https://github.com/nukleros/operator-builder).
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+## Local Development & Testing
 
-### Example usage
+To install the custom resource/s for this operator, make sure you have a
+kubeconfig set up for a test cluster, then install the CRDs.
 
-```
-The most basic example of how you would use the project
-```
-
-### Installation
-
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
-
-```
-Give the step
+```bash
+make install
 ```
 
-And repeat
+To run the controller locally against your test cluster.
 
+```bash
+make run
 ```
-until finished
+
+You can then test the operator by creating the sample manifests in another
+terminal.
+
+```bash
+kubectl apply -f config/samples
 ```
 
-End with an example of getting data out of the system or using it for a demo
+Give the validators some time to come up.  The validator nodes will go into a
+crashloop.  First because the database pod is not yet up, and then because it is
+failing password authentication when connecting to the DB.  This is a issue that
+will be fixed soon.  In the meantime, we have a workaround.
 
-## Documentation
+Stop the controller by hitting Ctrl-C in the terminal where you ran `make run`.
+Then run the following commands.
 
-Full usage and options or a link to the docs.pokt.network site
-
-## Running the tests
-
-Explain how to run the automated tests
-
+```bash
+cd .operator-builder/hack
+for v in $(cat validators); do ./update-db-pass.sh $v; done
+for v in $(cat validators); do kubectl delete po $v-0; done
 ```
-Give an example
+
+Run the dev client in the pocket client container.  See the [pocket development
+docs](https://github.com/pokt-network/pocket/tree/main/docs/development#running-localnet)
+for more info on using the dev client.
+
+```bash
+kubectl exec -it pocket-v1-client -- go run app/client/main.go
+```
+
+Finally, once testing is complete you can clean up.
+
+```bash
+make uninstall
+```
+
+## Code Generation
+
+The following steps will re-generate the codebase from scratch after making
+changes to the configurations, source manifests and/or markers.
+
+*Caution*: These steps will permanently delete any changes you have made
+directly to the codebase.
+
+Delete the existing codebase.
+
+```bash
+cd .operator-builder
+make operator-clean
+```
+
+Re-build the codebase from the existing configurations and source manifests.
+
+```bash
+make operator-init
+make operator-create
+```
+
+Install the dependencies (postgres operator) in your test cluster.
+
+```bash
+make operator-dependencies
+```
+
+Copy the modified sample manifests into the `config/samples` directory of the
+codebase.
+
+```bash
+make operator-samples
+cd ../
+```
+
+You can now re-test the operator using the [Local Development & Testing
+instructions](#local-development-&-testing) above.
+
+## Deploy the Controller Manager
+
+First, set the image name.
+
+```bash
+export IMG=myrepo/myproject:v0.1.0
+```
+
+Now you can build and push the image.
+
+```bash
+make docker-build
+make docker-push
+```
+
+Then deploy.
+
+```bash
+make deploy
+```
+
+To clean up.
+
+```bash
+make undeploy
+```
+
+## Companion CLI
+
+To build the companion CLI.
+
+```bash
+make build-cli
+```
+
+The CLI binary will get saved to the bin directory.  You can see the help
+message with the following.
+
+```bash
+./bin/pocketctl help
 ```
 
 ## Contributing
@@ -82,60 +178,7 @@ Please read [CONTRIBUTING.md](https://github.com/pokt-network/repo-template/blob
   <a href="https://research.pokt.network"><img src="https://img.shields.io/discourse/https/research.pokt.network/posts.svg"></a>
 </div>
 
-
 ## License
 
 This project is licensed under the MIT License; see the [LICENSE.md](LICENSE.md) file for details.
-=======
-A Kubernetes operator built with
-[operator-builder](https://github.com/vmware-tanzu-labs/operator-builder).
 
-## Local Development & Testing
-
-To install the custom resource/s for this operator, make sure you have a
-kubeconfig set up for a test cluster, then run:
-
-    make install
-
-To run the controller locally against a test cluster:
-
-    make run
-
-You can then test the operator by creating the sample manifest/s:
-
-    kubectl apply -f config/samples
-
-To clean up:
-
-    make uninstall
-
-## Deploy the Controller Manager
-
-First, set the image:
-
-    export IMG=myrepo/myproject:v0.1.0
-
-Now you can build and push the image:
-
-    make docker-build
-    make docker-push
-
-Then deploy:
-
-    make deploy
-
-To clean up:
-
-    make undeploy
-
-## Companion CLI
-
-To build the companion CLI:
-
-    make build-cli
-
-The CLI binary will get saved to the bin directory.  You can see the help
-message with:
-
-    ./bin/pocketctl help
->>>>>>> 54cd1fd (Add new controller, custom resources)
