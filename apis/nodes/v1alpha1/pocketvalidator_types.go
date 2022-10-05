@@ -46,11 +46,6 @@ type PocketValidatorSpec struct {
 	// +kubebuilder:default=1
 	// +kubebuilder:validation:Optional
 	// (Default: 1)
-	DbReplicas int `json:"dbReplicas,omitempty"`
-
-	// +kubebuilder:default=1
-	// +kubebuilder:validation:Optional
-	// (Default: 1)
 	ValidatorReplicas int `json:"validatorReplicas,omitempty"`
 
 	// +kubebuilder:validation:Required

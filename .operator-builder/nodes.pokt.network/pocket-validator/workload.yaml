@@ -12,6 +12,5 @@ spec:
     name: validators
   dependencies: []
   resources:
-    - database.yaml
     - validator.yaml
 

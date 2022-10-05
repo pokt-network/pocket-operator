@@ -36,7 +36,6 @@ spec:
   #collection:
     #name: "pocketset-sample"
     #namespace: ""
-  dbReplicas: 1
   validatorReplicas: 1
   pocketImage: "poktnetwork/pocket-v1:main-dev"
   privateKey: "privatekey"
@@ -120,7 +119,6 @@ var CreateFuncs = []func(
 	workload.Reconciler,
 	*workload.Request,
 ) ([]client.Object, error){
-	CreatepostgresqlCollectionNameParentNameDatabase,
 	CreateStatefulSetCollectionNameParentName,
 	CreateServiceCollectionNameParentName,
 	CreateConfigMapCollectionNameParentNameConfig,
