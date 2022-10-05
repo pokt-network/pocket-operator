@@ -20,18 +20,21 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
+	"github.com/nukleros/operator-builder-tools/pkg/controller/workload"
+
 	nodesv1alpha1 "github.com/lander2k2/pocket-v1-operator/apis/nodes/v1alpha1"
+	"github.com/lander2k2/pocket-v1-operator/apis/nodes/v1alpha1/pocketvalidator/mutate"
 )
 
 // +kubebuilder:rbac:groups=acid.zalan.do,resources=postgresqls,verbs=get;list;watch;create;update;patch;delete
 
-// CreatepostgresqlCollectionNameParentNameDatabase creates the !!start parent.Name !!end-database postgresql resource.
+// CreatepostgresqlCollectionNameParentNameDatabase creates the postgresql resource with name parent.name + -database.
 func CreatepostgresqlCollectionNameParentNameDatabase(
 	parent *nodesv1alpha1.PocketValidator,
 	collection *nodesv1alpha1.PocketSet,
+	reconciler workload.Reconciler,
+	req *workload.Request,
 ) ([]client.Object, error) {
-
-	resourceObjs := []client.Object{}
 	var resourceObj = &unstructured.Unstructured{
 		Object: map[string]interface{}{
 			"apiVersion": "acid.zalan.do/v1",
@@ -66,7 +69,5 @@ func CreatepostgresqlCollectionNameParentNameDatabase(
 		},
 	}
 
-	resourceObjs = append(resourceObjs, resourceObj)
-
-	return resourceObjs, nil
+	return mutate.MutatepostgresqlCollectionNameParentNameDatabase(resourceObj, parent, collection, reconciler, req)
 }

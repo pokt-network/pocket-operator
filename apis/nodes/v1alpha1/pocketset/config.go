@@ -20,17 +20,20 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
+	"github.com/nukleros/operator-builder-tools/pkg/controller/workload"
+
 	nodesv1alpha1 "github.com/lander2k2/pocket-v1-operator/apis/nodes/v1alpha1"
+	"github.com/lander2k2/pocket-v1-operator/apis/nodes/v1alpha1/pocketset/mutate"
 )
 
 // +kubebuilder:rbac:groups=core,resources=configmaps,verbs=get;list;watch;create;update;patch;delete
 
-// CreateConfigMapParentNameParentNameGenesis creates the !!start parent.Name !!end-genesis ConfigMap resource.
+// CreateConfigMapParentNameParentNameGenesis creates the ConfigMap resource with name parent.name + -genesis.
 func CreateConfigMapParentNameParentNameGenesis(
 	parent *nodesv1alpha1.PocketSet,
+	reconciler workload.Reconciler,
+	req *workload.Request,
 ) ([]client.Object, error) {
-
-	resourceObjs := []client.Object{}
 	var resourceObj = &unstructured.Unstructured{
 		Object: map[string]interface{}{
 			"apiVersion": "v1",
@@ -303,7 +306,5 @@ func CreateConfigMapParentNameParentNameGenesis(
 		},
 	}
 
-	resourceObjs = append(resourceObjs, resourceObj)
-
-	return resourceObjs, nil
+	return mutate.MutateConfigMapParentNameParentNameGenesis(resourceObj, parent, reconciler, req)
 }

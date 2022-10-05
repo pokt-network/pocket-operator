@@ -25,3 +25,9 @@ operator-dependencies:
 operator-samples:
 	cp samples/* ../config/samples/
 
+checkout:
+	git checkout \
+		../CONTRIBUTING.md \
+		../LICENSE.md \
+		../README.md
+

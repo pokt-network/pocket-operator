@@ -45,7 +45,7 @@ func nodesv1alpha1PocketValidatorChildrenFuncs(tester *E2ETest) error {
 		return fmt.Errorf("error in workload conversion; %w", err)
 	}
 
-	resourceObjects, err := pocketvalidator.Generate(*workload, *collection)
+	resourceObjects, err := pocketvalidator.Generate(*workload, *collection, nil, nil)
 	if err != nil {
 		return fmt.Errorf("unable to create objects in memory; %w", err)
 	}

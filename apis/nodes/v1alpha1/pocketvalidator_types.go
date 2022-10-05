@@ -53,8 +53,10 @@ type PocketValidatorSpec struct {
 	// (Default: 1)
 	ValidatorReplicas int `json:"validatorReplicas,omitempty"`
 
+	// +kubebuilder:validation:Required
 	PocketImage string `json:"pocketImage,omitempty"`
 
+	// +kubebuilder:validation:Required
 	PrivateKey string `json:"privateKey,omitempty"`
 }
 

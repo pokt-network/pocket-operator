@@ -20,20 +20,21 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
+	"github.com/nukleros/operator-builder-tools/pkg/controller/workload"
+
 	nodesv1alpha1 "github.com/lander2k2/pocket-v1-operator/apis/nodes/v1alpha1"
+	"github.com/lander2k2/pocket-v1-operator/apis/nodes/v1alpha1/pocketvalidator/mutate"
 )
 
 // +kubebuilder:rbac:groups=apps,resources=statefulsets,verbs=get;list;watch;create;update;patch;delete
 
-const StatefulSetCollectionNameParentName = "parent.Name"
-
-// CreateStatefulSetCollectionNameParentName creates the parent.Name StatefulSet resource.
+// CreateStatefulSetCollectionNameParentName creates the StatefulSet resource with name parent.Name.
 func CreateStatefulSetCollectionNameParentName(
 	parent *nodesv1alpha1.PocketValidator,
 	collection *nodesv1alpha1.PocketSet,
+	reconciler workload.Reconciler,
+	req *workload.Request,
 ) ([]client.Object, error) {
-
-	resourceObjs := []client.Object{}
 	var resourceObj = &unstructured.Unstructured{
 		Object: map[string]interface{}{
 			"apiVersion": "apps/v1",
@@ -131,22 +132,18 @@ func CreateStatefulSetCollectionNameParentName(
 		},
 	}
 
-	resourceObjs = append(resourceObjs, resourceObj)
-
-	return resourceObjs, nil
+	return mutate.MutateStatefulSetCollectionNameParentName(resourceObj, parent, collection, reconciler, req)
 }
 
 // +kubebuilder:rbac:groups=core,resources=services,verbs=get;list;watch;create;update;patch;delete
 
-const ServiceCollectionNameParentName = "parent.Name"
-
-// CreateServiceCollectionNameParentName creates the parent.Name Service resource.
+// CreateServiceCollectionNameParentName creates the Service resource with name parent.Name.
 func CreateServiceCollectionNameParentName(
 	parent *nodesv1alpha1.PocketValidator,
 	collection *nodesv1alpha1.PocketSet,
+	reconciler workload.Reconciler,
+	req *workload.Request,
 ) ([]client.Object, error) {
-
-	resourceObjs := []client.Object{}
 	var resourceObj = &unstructured.Unstructured{
 		Object: map[string]interface{}{
 			"apiVersion": "v1",
@@ -176,20 +173,18 @@ func CreateServiceCollectionNameParentName(
 		},
 	}
 
-	resourceObjs = append(resourceObjs, resourceObj)
-
-	return resourceObjs, nil
+	return mutate.MutateServiceCollectionNameParentName(resourceObj, parent, collection, reconciler, req)
 }
 
 // +kubebuilder:rbac:groups=core,resources=configmaps,verbs=get;list;watch;create;update;patch;delete
 
-// CreateConfigMapCollectionNameParentNameConfig creates the !!start parent.Name !!end-config ConfigMap resource.
+// CreateConfigMapCollectionNameParentNameConfig creates the ConfigMap resource with name parent.name + -config.
 func CreateConfigMapCollectionNameParentNameConfig(
 	parent *nodesv1alpha1.PocketValidator,
 	collection *nodesv1alpha1.PocketSet,
+	reconciler workload.Reconciler,
+	req *workload.Request,
 ) ([]client.Object, error) {
-
-	resourceObjs := []client.Object{}
 	var resourceObj = &unstructured.Unstructured{
 		Object: map[string]interface{}{
 			"apiVersion": "v1",
@@ -236,7 +231,5 @@ func CreateConfigMapCollectionNameParentNameConfig(
 		},
 	}
 
-	resourceObjs = append(resourceObjs, resourceObj)
-
-	return resourceObjs, nil
+	return mutate.MutateConfigMapCollectionNameParentNameConfig(resourceObj, parent, collection, reconciler, req)
 }
