@@ -69,11 +69,13 @@ func Sample(requiredOnly bool) string {
 func Generate(
 	workloadObj nodesv1alpha1.PocketValidator,
 	collectionObj nodesv1alpha1.PocketSet,
+	reconciler workload.Reconciler,
+	req *workload.Request,
 ) ([]client.Object, error) {
 	resourceObjects := []client.Object{}
 
 	for _, f := range CreateFuncs {
-		resources, err := f(&workloadObj, &collectionObj)
+		resources, err := f(&workloadObj, &collectionObj, reconciler, req)
 
 		if err != nil {
 			return nil, err
@@ -106,7 +108,7 @@ func GenerateForCLI(workloadFile []byte, collectionFile []byte) ([]client.Object
 		return nil, fmt.Errorf("error validating collection yaml, %w", err)
 	}
 
-	return Generate(workloadObj, collectionObj)
+	return Generate(workloadObj, collectionObj, nil, nil)
 }
 
 // CreateFuncs is an array of functions that are called to create the child resources for the controller
@@ -115,6 +117,8 @@ func GenerateForCLI(workloadFile []byte, collectionFile []byte) ([]client.Object
 var CreateFuncs = []func(
 	*nodesv1alpha1.PocketValidator,
 	*nodesv1alpha1.PocketSet,
+	workload.Reconciler,
+	*workload.Request,
 ) ([]client.Object, error){
 	CreatepostgresqlCollectionNameParentNameDatabase,
 	CreateStatefulSetCollectionNameParentName,
@@ -133,6 +137,8 @@ var CreateFuncs = []func(
 var InitFuncs = []func(
 	*nodesv1alpha1.PocketValidator,
 	*nodesv1alpha1.PocketSet,
+	workload.Reconciler,
+	*workload.Request,
 ) ([]client.Object, error){}
 
 func ConvertWorkload(component, collection workload.Workload) (

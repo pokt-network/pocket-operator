@@ -14,36 +14,28 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package pocketset
+package mutate
 
 import (
-	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+
+	"github.com/nukleros/operator-builder-tools/pkg/controller/workload"
 
 	nodesv1alpha1 "github.com/lander2k2/pocket-v1-operator/apis/nodes/v1alpha1"
 )
 
-// +kubebuilder:rbac:groups=core,resources=namespaces,verbs=get;list;watch;create;update;patch;delete
-
-const NamespaceParentName = "parent.Name"
-
-// CreateNamespaceParentName creates the parent.Name Namespace resource.
-func CreateNamespaceParentName(
+// MutateConfigMapParentNameParentNameGenesis mutates the ConfigMap resource with name parent.name + -genesis.
+func MutateConfigMapParentNameParentNameGenesis(
+	original client.Object,
 	parent *nodesv1alpha1.PocketSet,
+	reconciler workload.Reconciler, req *workload.Request,
 ) ([]client.Object, error) {
-
-	resourceObjs := []client.Object{}
-	var resourceObj = &unstructured.Unstructured{
-		Object: map[string]interface{}{
-			"apiVersion": "v1",
-			"kind":       "Namespace",
-			"metadata": map[string]interface{}{
-				"name": parent.Name, //  controlled by field:
-			},
-		},
+	// if either the reconciler or request are found to be nil, return the base object.
+	if reconciler == nil || req == nil {
+		return []client.Object{original}, nil
 	}
 
-	resourceObjs = append(resourceObjs, resourceObj)
+	// mutation logic goes here
 
-	return resourceObjs, nil
+	return []client.Object{original}, nil
 }

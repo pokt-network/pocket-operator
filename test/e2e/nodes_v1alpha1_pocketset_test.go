@@ -45,7 +45,7 @@ func nodesv1alpha1PocketSetChildrenFuncs(tester *E2ETest) error {
 		return fmt.Errorf("error in workload conversion; %w", err)
 	}
 
-	resourceObjects, err := pocketset.Generate(*workload)
+	resourceObjects, err := pocketset.Generate(*workload, nil, nil)
 	if err != nil {
 		return fmt.Errorf("unable to create objects in memory; %w", err)
 	}

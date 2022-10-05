@@ -20,17 +20,20 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
+	"github.com/nukleros/operator-builder-tools/pkg/controller/workload"
+
 	nodesv1alpha1 "github.com/lander2k2/pocket-v1-operator/apis/nodes/v1alpha1"
+	"github.com/lander2k2/pocket-v1-operator/apis/nodes/v1alpha1/pocketset/mutate"
 )
 
 // +kubebuilder:rbac:groups=core,resources=services,verbs=get;list;watch;create;update;patch;delete
 
-// CreateServiceParentNameParentNameValidators creates the !!start parent.Name !!end-validators Service resource.
+// CreateServiceParentNameParentNameValidators creates the Service resource with name parent.name + -validators.
 func CreateServiceParentNameParentNameValidators(
 	parent *nodesv1alpha1.PocketSet,
+	reconciler workload.Reconciler,
+	req *workload.Request,
 ) ([]client.Object, error) {
-
-	resourceObjs := []client.Object{}
 	var resourceObj = &unstructured.Unstructured{
 		Object: map[string]interface{}{
 			"apiVersion": "v1",
@@ -58,7 +61,5 @@ func CreateServiceParentNameParentNameValidators(
 		},
 	}
 
-	resourceObjs = append(resourceObjs, resourceObj)
-
-	return resourceObjs, nil
+	return mutate.MutateServiceParentNameParentNameValidators(resourceObj, parent, reconciler, req)
 }
