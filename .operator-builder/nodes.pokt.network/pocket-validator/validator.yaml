@@ -70,8 +70,9 @@ metadata:
   name: name-config # +operator-builder:field:parent=metadata.name,type=string,replace="name"
   namespace: default # +operator-builder:collection:field:parent=metadata.name,type=string
 data:
-  # +operator-builder:field:name=privateKey,type=string,replace="privatekey"
-  # +operator-builder:field:parent=metadata.name,type=string,replace="dbservice"
+  # +operator-builder:field:name=privateKey,type=string,replace="privatekey",default="ccec19df8fe866280e41da68d52d0ecdb07b01e85eeef45f400fd3a89b71c26a79254a4bc46bf1182826145b0b01b48bab4240cd30e23ba90e4e5e6b56961c6d"
+  # +operator-builder:field:name=postgres_url,type=string,replace="MOCK_POSTGRES_URL",default="postgres://validator:postgres@pocket-database:5432/validatordb"
+  # +operator-builder:field:name=postgres_schema,type=string,replace="MOCK_POSTGRES_SCHEMA",default="validator"
   # +operator-builder:field:name=ports.consensus,type=int,replace="consensus_port_value",default="8080"
   config.json: |
     {
@@ -93,8 +94,8 @@ data:
         "max_mempool_transactions": 9000
       },
       "persistence": {
-        "postgres_url": "postgres://validator:postgres@dbservice-database:5432/validatordb",
-        "node_schema": "validator",
+        "postgres_url": "MOCK_POSTGRES_URL",
+        "node_schema": "MOCK_POSTGRES_SCHEMA",
         "block_store_path": "/blockstore"
       },
       "p2p": {

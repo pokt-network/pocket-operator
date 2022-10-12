@@ -189,7 +189,8 @@ func CreateConfigMapCollectionNameParentNameConfig(
 			},
 			"data": map[string]interface{}{
 				// controlled by field: privateKey
-				// controlled by field:
+				// controlled by field: postgres_url
+				// controlled by field: postgres_schema
 				// controlled by field: ports.consensus
 				"config.json": `{
   "base": {
@@ -210,8 +211,8 @@ func CreateConfigMapCollectionNameParentNameConfig(
     "max_mempool_transactions": 9000
   },
   "persistence": {
-    "postgres_url": "postgres://validator:postgres@` + parent.Name + `-database:5432/validatordb",
-    "node_schema": "validator",
+    "postgres_url": "` + parent.Spec.Postgres_url + `",
+    "node_schema": "` + parent.Spec.Postgres_schema + `",
     "block_store_path": "/blockstore"
   },
   "p2p": {

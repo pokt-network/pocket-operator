@@ -1,13 +1,13 @@
 apiVersion: nodes.pokt.network/v1alpha1
 kind: PocketValidator
 metadata:
-  name: pocketvalidator-sample
+  name: v1-validator1
 spec:
-  #collection:
-    #name: "pocketset-sample"
-    #namespace: ""
+  collection:
+    name: "primary"
   validatorReplicas: 1
-  pocketImage: "ghcr.io/pokt-network/pocket-v1:main-dev"
-  ports:
-    consensus: 8080
-  privateKey: "privatekey"
+  # TODO: once we have this available via envar, make a secretRef
+  postgres_url: postgres://validator:EgSGBwwdcy4CWg5Oy8VxsFg1Yd2INukyr1xyvBKeTagxH0zeciq34SBy1IPCNdmm@pocket-database:5432/validatordb
+  postgres_schema: validator1
+  pocketImage: "ghcr.io/pokt-network/pocket-v1:sha-87a6060-dev"
+  privateKey: "6fd0bc54cc2dd205eaf226eebdb0451629b321f11d279013ce6fdd5a33059256b2eda2232ffb2750bf761141f70f75a03a025f65b2b2b417c7f8b3c9ca91e8e4"

@@ -10,6 +10,10 @@ CREATE_OPTS=create api \
 	--resource# \
 	#--force
 
+# TMP_DIR=../.tmp-operator/pocket-operator
+
+# MOVE_EXCEPTIONS_REGEX=README.md|.gitignore|^\.$$|^\.\.$$
+
 operator-clean:
 	rm -rf ../*
 
@@ -18,6 +22,12 @@ operator-init:
 
 operator-create:
 	cd .. && operator-builder $(CREATE_OPTS)
+
+# operator-move-files:
+# 	# ls -a $(TMP_DIR) | grep -Ev '($(MOVE_EXCEPTIONS_REGEX))'
+# 	FILES=$(cd $(TMP_DIR) && ls -a | grep -Ev '($(MOVE_EXCEPTIONS_REGEX))')
+# 	echo $(FILES)
+# 	# cd $(TMP_DIR) && mv $(ls -a | grep -Ev '($(MOVE_EXCEPTIONS_REGEX))') ../
 
 operator-dependencies:
 	kubectl apply -f dependencies
@@ -29,5 +39,6 @@ checkout:
 	git checkout \
 		../CONTRIBUTING.md \
 		../LICENSE.md \
-		../README.md
+		../README.md \
+		../.gitignore
 
