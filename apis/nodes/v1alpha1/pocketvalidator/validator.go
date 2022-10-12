@@ -17,13 +17,15 @@ limitations under the License.
 package pocketvalidator
 
 import (
+	"strconv"
+
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	"github.com/nukleros/operator-builder-tools/pkg/controller/workload"
 
-	nodesv1alpha1 "github.com/lander2k2/pocket-v1-operator/apis/nodes/v1alpha1"
-	"github.com/lander2k2/pocket-v1-operator/apis/nodes/v1alpha1/pocketvalidator/mutate"
+	nodesv1alpha1 "github.com/pokt-network/pocket-operator/apis/nodes/v1alpha1"
+	"github.com/pokt-network/pocket-operator/apis/nodes/v1alpha1/pocketvalidator/mutate"
 )
 
 // +kubebuilder:rbac:groups=apps,resources=statefulsets,verbs=get;list;watch;create;update;patch;delete
@@ -70,12 +72,8 @@ func CreateStatefulSetCollectionNameParentName(
 								},
 								"ports": []interface{}{
 									map[string]interface{}{
-										"containerPort": 8221,
-										"name":          "pre2p",
-									},
-									map[string]interface{}{
-										"containerPort": 8222,
-										"name":          "p2p",
+										"containerPort": parent.Spec.Ports.Consensus, //  controlled by field: ports.consensus
+										"name":          "consensus",
 									},
 								},
 								"volumeMounts": []interface{}{
@@ -158,12 +156,8 @@ func CreateServiceCollectionNameParentName(
 			"spec": map[string]interface{}{
 				"ports": []interface{}{
 					map[string]interface{}{
-						"port": 8221,
-						"name": "pre2p",
-					},
-					map[string]interface{}{
-						"port": 8222,
-						"name": "p2p",
+						"port": parent.Spec.Ports.Consensus, //  controlled by field: ports.consensus
+						"name": "consensus",
 					},
 				},
 				"selector": map[string]interface{}{
@@ -196,6 +190,7 @@ func CreateConfigMapCollectionNameParentNameConfig(
 			"data": map[string]interface{}{
 				// controlled by field: privateKey
 				// controlled by field:
+				// controlled by field: ports.consensus
 				"config.json": `{
   "base": {
     "root_directory": "/go/src/github.com/pocket-network",
@@ -207,18 +202,23 @@ func CreateConfigMapCollectionNameParentNameConfig(
       "timeout_msec": 5000,
       "manual": true,
       "debug_time_between_steps_msec": 1000
-    }
+    },
+    "private_key": "` + parent.Spec.PrivateKey + `"
   },
-  "utility": {},
+  "utility": {
+    "max_mempool_transaction_bytes": 1073741824,
+    "max_mempool_transactions": 9000
+  },
   "persistence": {
     "postgres_url": "postgres://validator:postgres@` + parent.Name + `-database:5432/validatordb",
     "node_schema": "validator",
     "block_store_path": "/blockstore"
   },
   "p2p": {
-    "consensus_port": 8080,
+    "consensus_port": ` + strconv.Itoa(parent.Spec.Ports.Consensus) + `,
     "use_rain_tree": true,
-    "connection_type": 1
+    "is_empty_connection_type": false,
+    "private_key": "` + parent.Spec.PrivateKey + `"
   },
   "telemetry": {
     "enabled": true,

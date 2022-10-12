@@ -1,6 +1,6 @@
 
 # Image URL to use all building/pushing image targets
-IMG ?= "lander2k2/pocket-v1-operator:latest"
+IMG ?= "pokt-network/pocket-operator:latest"
 # Produce CRDs that work back to Kubernetes 1.11 (no version conversion)
 CRD_OPTIONS ?= "crd:crdVersions=v1"
 
@@ -56,7 +56,7 @@ test: manifests generate fmt vet ## Run tests.
 	source ${ENVTEST_ASSETS_DIR}/setup-envtest.sh; fetch_envtest_tools $(ENVTEST_ASSETS_DIR); setup_envtest_env $(ENVTEST_ASSETS_DIR); go test ./... -coverprofile cover.out
 
 test-e2e:
-	go test github.com/lander2k2/pocket-v1-operator/test/e2e -tags=e2e_test -count=1
+	go test github.com/pokt-network/pocket-operator/test/e2e -tags=e2e_test -count=1
 
 ##@ Build
 

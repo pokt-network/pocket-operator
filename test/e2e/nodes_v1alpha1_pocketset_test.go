@@ -27,13 +27,11 @@ import (
 
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 
-	nodesv1alpha1 "github.com/lander2k2/pocket-v1-operator/apis/nodes/v1alpha1"
-	"github.com/lander2k2/pocket-v1-operator/apis/nodes/v1alpha1/pocketset"
+	nodesv1alpha1 "github.com/pokt-network/pocket-operator/apis/nodes/v1alpha1"
+	"github.com/pokt-network/pocket-operator/apis/nodes/v1alpha1/pocketset"
 )
 
-//
 // nodesv1alpha1PocketSet tests
-//
 func nodesv1alpha1PocketSetChildrenFuncs(tester *E2ETest) error {
 	// TODO: need to run r.GetResources(request) on the reconciler to get the mutated resources
 	if len(pocketset.CreateFuncs) == 0 {

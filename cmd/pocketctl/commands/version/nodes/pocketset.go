@@ -19,9 +19,9 @@ package nodes
 import (
 	"github.com/spf13/cobra"
 
-	cmdversion "github.com/lander2k2/pocket-v1-operator/cmd/pocketctl/commands/version"
+	cmdversion "github.com/pokt-network/pocket-operator/cmd/pocketctl/commands/version"
 
-	"github.com/lander2k2/pocket-v1-operator/apis/nodes"
+	"github.com/pokt-network/pocket-operator/apis/nodes"
 )
 
 // NewPocketSetSubCommand creates a new command and adds it to its

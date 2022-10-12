@@ -22,8 +22,8 @@ import (
 
 	"github.com/nukleros/operator-builder-tools/pkg/controller/workload"
 
-	nodesv1alpha1 "github.com/lander2k2/pocket-v1-operator/apis/nodes/v1alpha1"
-	"github.com/lander2k2/pocket-v1-operator/apis/nodes/v1alpha1/pocketset/mutate"
+	nodesv1alpha1 "github.com/pokt-network/pocket-operator/apis/nodes/v1alpha1"
+	"github.com/pokt-network/pocket-operator/apis/nodes/v1alpha1/pocketset/mutate"
 )
 
 // +kubebuilder:rbac:groups=core,resources=services,verbs=get;list;watch;create;update;patch;delete

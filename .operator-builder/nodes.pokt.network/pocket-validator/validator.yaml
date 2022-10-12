@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: pocket
-          image: poktnetwork/pocket-v1:main-dev # +operator-builder:field:name=pocketImage,type=string
+          image: ghcr.io/pokt-network/pocket-v1:main-dev # +operator-builder:field:name=pocketImage,type=string
           args:
             - pocket
             - -config=/configs/config.json

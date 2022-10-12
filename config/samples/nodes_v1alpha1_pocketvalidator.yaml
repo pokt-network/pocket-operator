@@ -1,11 +1,13 @@
 apiVersion: nodes.pokt.network/v1alpha1
 kind: PocketValidator
 metadata:
-  name: v1-validator1
+  name: pocketvalidator-sample
 spec:
-  collection:
-    name: "primary"
+  #collection:
+    #name: "pocketset-sample"
+    #namespace: ""
   validatorReplicas: 1
-  dbReplicas: 1
-  pocketImage: "poktnetwork/pocket-v1:sha-2cd775d-dev"
-  privateKey: "ccec19df8fe866280e41da68d52d0ecdb07b01e85eeef45f400fd3a89b71c26a79254a4bc46bf1182826145b0b01b48bab4240cd30e23ba90e4e5e6b56961c6d"
+  pocketImage: "ghcr.io/pokt-network/pocket-v1:main-dev"
+  ports:
+    consensus: 8080
+  privateKey: "privatekey"

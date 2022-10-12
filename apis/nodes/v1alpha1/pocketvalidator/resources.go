@@ -24,7 +24,7 @@ import (
 
 	"github.com/nukleros/operator-builder-tools/pkg/controller/workload"
 
-	nodesv1alpha1 "github.com/lander2k2/pocket-v1-operator/apis/nodes/v1alpha1"
+	nodesv1alpha1 "github.com/pokt-network/pocket-operator/apis/nodes/v1alpha1"
 )
 
 // samplePocketValidator is a sample containing all fields
@@ -37,7 +37,9 @@ spec:
     #name: "pocketset-sample"
     #namespace: ""
   validatorReplicas: 1
-  pocketImage: "poktnetwork/pocket-v1:main-dev"
+  pocketImage: "ghcr.io/pokt-network/pocket-v1:main-dev"
+  ports:
+    consensus: 8080
   privateKey: "privatekey"
 `
 
@@ -50,7 +52,7 @@ spec:
   #collection:
     #name: "pocketset-sample"
     #namespace: ""
-  pocketImage: "poktnetwork/pocket-v1:main-dev"
+  pocketImage: "ghcr.io/pokt-network/pocket-v1:main-dev"
   privateKey: "privatekey"
 `
 

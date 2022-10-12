@@ -29,11 +29,11 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	// common imports for subcommands
-	cmdgenerate "github.com/lander2k2/pocket-v1-operator/cmd/pocketctl/commands/generate"
+	cmdgenerate "github.com/pokt-network/pocket-operator/cmd/pocketctl/commands/generate"
 
 	// specific imports for workloads
 
-	v1alpha1pocketvalidator "github.com/lander2k2/pocket-v1-operator/apis/nodes/v1alpha1/pocketvalidator"
+	v1alpha1pocketvalidator "github.com/pokt-network/pocket-operator/apis/nodes/v1alpha1/pocketvalidator"
 	//+kubebuilder:scaffold:operator-builder:imports
 )
 

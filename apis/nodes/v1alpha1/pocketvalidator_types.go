@@ -51,6 +51,9 @@ type PocketValidatorSpec struct {
 	// +kubebuilder:validation:Required
 	PocketImage string `json:"pocketImage,omitempty"`
 
+	// +kubebuilder:validation:Optional
+	Ports PocketValidatorSpecPorts `json:"ports,omitempty"`
+
 	// +kubebuilder:validation:Required
 	PrivateKey string `json:"privateKey,omitempty"`
 }
@@ -65,6 +68,13 @@ type PocketValidatorCollectionSpec struct {
 	// (Default: "") The namespace where the collection exists.  Required only if
 	// the collection is namespace scoped and not cluster scoped.
 	Namespace string `json:"namespace"`
+}
+
+type PocketValidatorSpecPorts struct {
+	// +kubebuilder:default=8080
+	// +kubebuilder:validation:Optional
+	// (Default: 8080)
+	Consensus int `json:"consensus,omitempty"`
 }
 
 // PocketValidatorStatus defines the observed state of PocketValidator.
