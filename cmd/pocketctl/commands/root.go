@@ -20,14 +20,14 @@ import (
 	"github.com/spf13/cobra"
 
 	// common imports for subcommands
-	cmdgenerate "github.com/lander2k2/pocket-v1-operator/cmd/pocketctl/commands/generate"
-	cmdinit "github.com/lander2k2/pocket-v1-operator/cmd/pocketctl/commands/init"
-	cmdversion "github.com/lander2k2/pocket-v1-operator/cmd/pocketctl/commands/version"
+	cmdgenerate "github.com/pokt-network/pocket-operator/cmd/pocketctl/commands/generate"
+	cmdinit "github.com/pokt-network/pocket-operator/cmd/pocketctl/commands/init"
+	cmdversion "github.com/pokt-network/pocket-operator/cmd/pocketctl/commands/version"
 
 	// specific imports for workloads
-	generatenodes "github.com/lander2k2/pocket-v1-operator/cmd/pocketctl/commands/generate/nodes"
-	initnodes "github.com/lander2k2/pocket-v1-operator/cmd/pocketctl/commands/init/nodes"
-	versionnodes "github.com/lander2k2/pocket-v1-operator/cmd/pocketctl/commands/version/nodes"
+	generatenodes "github.com/pokt-network/pocket-operator/cmd/pocketctl/commands/generate/nodes"
+	initnodes "github.com/pokt-network/pocket-operator/cmd/pocketctl/commands/init/nodes"
+	versionnodes "github.com/pokt-network/pocket-operator/cmd/pocketctl/commands/version/nodes"
 	//+kubebuilder:scaffold:operator-builder:subcommands:imports
 )
 

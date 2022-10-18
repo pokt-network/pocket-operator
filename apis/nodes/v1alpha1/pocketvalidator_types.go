@@ -51,8 +51,23 @@ type PocketValidatorSpec struct {
 	// +kubebuilder:validation:Required
 	PocketImage string `json:"pocketImage,omitempty"`
 
-	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Optional
+	Ports PocketValidatorSpecPorts `json:"ports,omitempty"`
+
+	// +kubebuilder:default="ccec19df8fe866280e41da68d52d0ecdb07b01e85eeef45f400fd3a89b71c26a79254a4bc46bf1182826145b0b01b48bab4240cd30e23ba90e4e5e6b56961c6d"
+	// +kubebuilder:validation:Optional
+	// (Default: "ccec19df8fe866280e41da68d52d0ecdb07b01e85eeef45f400fd3a89b71c26a79254a4bc46bf1182826145b0b01b48bab4240cd30e23ba90e4e5e6b56961c6d")
 	PrivateKey string `json:"privateKey,omitempty"`
+
+	// +kubebuilder:default="postgres://validator:postgres@pocket-database:5432/validatordb"
+	// +kubebuilder:validation:Optional
+	// (Default: "postgres://validator:postgres@pocket-database:5432/validatordb")
+	Postgres_url string `json:"postgres_url,omitempty"`
+
+	// +kubebuilder:default="validator"
+	// +kubebuilder:validation:Optional
+	// (Default: "validator")
+	Postgres_schema string `json:"postgres_schema,omitempty"`
 }
 
 type PocketValidatorCollectionSpec struct {
@@ -65,6 +80,13 @@ type PocketValidatorCollectionSpec struct {
 	// (Default: "") The namespace where the collection exists.  Required only if
 	// the collection is namespace scoped and not cluster scoped.
 	Namespace string `json:"namespace"`
+}
+
+type PocketValidatorSpecPorts struct {
+	// +kubebuilder:default=8080
+	// +kubebuilder:validation:Optional
+	// (Default: 8080)
+	Consensus int `json:"consensus,omitempty"`
 }
 
 // PocketValidatorStatus defines the observed state of PocketValidator.

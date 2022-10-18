@@ -17,7 +17,7 @@ limitations under the License.
 package main
 
 import (
-	"github.com/lander2k2/pocket-v1-operator/cmd/pocketctl/commands"
+	"github.com/pokt-network/pocket-operator/cmd/pocketctl/commands"
 )
 
 func main() {

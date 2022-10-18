@@ -24,7 +24,7 @@ import (
 
 	"github.com/nukleros/operator-builder-tools/pkg/controller/workload"
 
-	nodesv1alpha1 "github.com/lander2k2/pocket-v1-operator/apis/nodes/v1alpha1"
+	nodesv1alpha1 "github.com/pokt-network/pocket-operator/apis/nodes/v1alpha1"
 )
 
 // samplePocketSet is a sample containing all fields

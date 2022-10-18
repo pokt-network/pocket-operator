@@ -39,10 +39,10 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 	"sigs.k8s.io/controller-runtime/pkg/source"
 
-	nodesv1alpha1 "github.com/lander2k2/pocket-v1-operator/apis/nodes/v1alpha1"
-	"github.com/lander2k2/pocket-v1-operator/apis/nodes/v1alpha1/pocketvalidator"
-	"github.com/lander2k2/pocket-v1-operator/internal/dependencies"
-	"github.com/lander2k2/pocket-v1-operator/internal/mutate"
+	nodesv1alpha1 "github.com/pokt-network/pocket-operator/apis/nodes/v1alpha1"
+	"github.com/pokt-network/pocket-operator/apis/nodes/v1alpha1/pocketvalidator"
+	"github.com/pokt-network/pocket-operator/internal/dependencies"
+	"github.com/pokt-network/pocket-operator/internal/mutate"
 )
 
 // PocketValidatorReconciler reconciles a PocketValidator object.

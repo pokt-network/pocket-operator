@@ -8,7 +8,7 @@ plugins:
     controllerImg: ""
     workloadConfigPath: .operator-builder/workload.yaml
 projectName: pocket-operator
-repo: github.com/lander2k2/pocket-v1-operator
+repo: github.com/pokt-network/pocket-operator
 resources:
 - api:
     crdVersion: v1
@@ -17,7 +17,7 @@ resources:
   domain: pokt.network
   group: nodes
   kind: PocketSet
-  path: github.com/lander2k2/pocket-v1-operator/apis/nodes/v1alpha1
+  path: github.com/pokt-network/pocket-operator/apis/nodes/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
@@ -25,6 +25,6 @@ resources:
   domain: pokt.network
   group: nodes
   kind: PocketValidator
-  path: github.com/lander2k2/pocket-v1-operator/apis/nodes/v1alpha1
+  path: github.com/pokt-network/pocket-operator/apis/nodes/v1alpha1
   version: v1alpha1
 version: "3"

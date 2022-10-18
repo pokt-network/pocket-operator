@@ -17,7 +17,7 @@ limitations under the License.
 package nodes
 
 import (
-	v1alpha1nodes "github.com/lander2k2/pocket-v1-operator/apis/nodes/v1alpha1"
+	v1alpha1nodes "github.com/pokt-network/pocket-operator/apis/nodes/v1alpha1"
 	//+kubebuilder:scaffold:operator-builder:imports
 
 	"k8s.io/apimachinery/pkg/runtime/schema"

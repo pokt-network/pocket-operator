@@ -6,6 +6,8 @@ spec:
   collection:
     name: "primary"
   validatorReplicas: 1
-  dbReplicas: 1
-  pocketImage: "poktnetwork/pocket-v1:sha-2cd775d-dev"
-  privateKey: "ccec19df8fe866280e41da68d52d0ecdb07b01e85eeef45f400fd3a89b71c26a79254a4bc46bf1182826145b0b01b48bab4240cd30e23ba90e4e5e6b56961c6d"
+  # TODO: once we have this available via envar, make a secretRef
+  postgres_url: postgres://validator:EgSGBwwdcy4CWg5Oy8VxsFg1Yd2INukyr1xyvBKeTagxH0zeciq34SBy1IPCNdmm@pocket-database:5432/validatordb
+  postgres_schema: validator1
+  pocketImage: "ghcr.io/pokt-network/pocket-v1:sha-87a6060-dev"
+  privateKey: "6fd0bc54cc2dd205eaf226eebdb0451629b321f11d279013ce6fdd5a33059256b2eda2232ffb2750bf761141f70f75a03a025f65b2b2b417c7f8b3c9ca91e8e4"

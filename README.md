@@ -9,8 +9,8 @@
 Deploy and manage pocket nodes on Kubernetes.
 
 <div>
-  <a  href="https://godoc.org/github.com/pokt-network/pocket-core"><img src="https://img.shields.io/badge/godoc-reference-blue.svg"/></a>
-  <a  href="https://goreportcard.com/report/github.com/pokt-network/pocket-core"><img src="https://goreportcard.com/badge/github.com/pokt-network/pocket-core"/></a>
+  <a  href="https://godoc.org/github.com/pokt-network/pocket-operator"><img src="https://img.shields.io/badge/godoc-reference-blue.svg"/></a>
+  <a  href="https://goreportcard.com/report/github.com/pokt-network/pocket-operator"><img src="https://goreportcard.com/badge/github.com/pokt-network/pocket-operator"/></a>
   <a href="https://golang.org"><img  src="https://img.shields.io/badge/golang-v1.11-red.svg"/></a>
   <a  href="https://github.com/tools/godep" ><img src="https://img.shields.io/badge/godep-dependency-71a3d9.svg"/></a>
 </div>
@@ -18,14 +18,13 @@ Deploy and manage pocket nodes on Kubernetes.
 ## Overview
 
 <div>
-    <a  href="https://github.com/pokt-network/pocket-core/releases"><img src="https://img.shields.io/github/release-pre/pokt-network/pocket-core.svg"/></a>
-    <a href="https://circleci.com/gh/pokt-network/pocket-core/tree/staging"><img src="https://circleci.com/gh/pokt-network/pocket-core/tree/staging.svg?style=svg"/></a>
-    <a  href="https://github.com/pokt-network/pocket-core/pulse"><img src="https://img.shields.io/github/contributors/pokt-network/pocket-core.svg"/></a>
+    <a  href="https://github.com/pokt-network/pocket-operator/releases"><img src="https://img.shields.io/github/release-pre/pokt-network/pocket-operator.svg"/></a>
+    <a  href="https://github.com/pokt-network/pocket-operator/pulse"><img src="https://img.shields.io/github/contributors/pokt-network/pocket-operator.svg"/></a>
     <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-blue.svg"/></a>
-    <a href="https://github.com/pokt-network/pocket-core/pulse"><img src="https://img.shields.io/github/last-commit/pokt-network/pocket-core.svg"/></a>
-    <a href="https://github.com/pokt-network/pocket-core/pulls"><img src="https://img.shields.io/github/issues-pr/pokt-network/pocket-core.svg"/></a>
-    <a href="https://github.com/pokt-network/pocket-core/releases"><img src="https://img.shields.io/badge/platform-linux%20%7C%20windows%20%7C%20macos-pink.svg"/></a>
-    <a href="https://github.com/pokt-network/pocket-core/issues"><img src="https://img.shields.io/github/issues-closed/pokt-network/pocket-core.svg"/></a>
+    <a href="https://github.com/pokt-network/pocket-operator/pulse"><img src="https://img.shields.io/github/last-commit/pokt-network/pocket-operator.svg"/></a>
+    <a href="https://github.com/pokt-network/pocket-operator/pulls"><img src="https://img.shields.io/github/issues-pr/pokt-network/pocket-operator.svg"/></a>
+    <a href="https://github.com/pokt-network/pocket-operator/releases"><img src="https://img.shields.io/badge/platform-linux%20%7C%20windows%20%7C%20macos-pink.svg"/></a>
+    <a href="https://github.com/pokt-network/pocket-operator/issues"><img src="https://img.shields.io/github/issues-closed/pokt-network/pocket-operator.svg"/></a>
 </div>
 
 The Pocket Operator extends the Kubernetes control plane to create, read, update

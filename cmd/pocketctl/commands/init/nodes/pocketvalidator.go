@@ -22,10 +22,10 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/lander2k2/pocket-v1-operator/apis/nodes"
+	"github.com/pokt-network/pocket-operator/apis/nodes"
 
-	v1alpha1pocketvalidator "github.com/lander2k2/pocket-v1-operator/apis/nodes/v1alpha1/pocketvalidator"
-	cmdinit "github.com/lander2k2/pocket-v1-operator/cmd/pocketctl/commands/init"
+	v1alpha1pocketvalidator "github.com/pokt-network/pocket-operator/apis/nodes/v1alpha1/pocketvalidator"
+	cmdinit "github.com/pokt-network/pocket-operator/cmd/pocketctl/commands/init"
 	//+kubebuilder:scaffold:operator-builder:imports
 )
 

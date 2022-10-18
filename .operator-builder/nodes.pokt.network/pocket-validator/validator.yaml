@@ -2,50 +2,48 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: v1-validator1  # +operator-builder:field:parent=metadata.name,type=string
+  name: v1-validator1 # +operator-builder:field:parent=metadata.name,type=string
   namespace: default # +operator-builder:collection:field:parent=metadata.name,type=string
 spec:
   selector:
     matchLabels:
-      app: v1-validator1  # +operator-builder:field:parent=metadata.name,type=string
-  serviceName: v1-validator1  # +operator-builder:field:parent=metadata.name,type=string
-  replicas: 1  # +operator-builder:field:name=validatorReplicas,type=int,default=1
+      app: v1-validator1 # +operator-builder:field:parent=metadata.name,type=string
+  serviceName: v1-validator1 # +operator-builder:field:parent=metadata.name,type=string
+  replicas: 1 # +operator-builder:field:name=validatorReplicas,type=int,default=1
   template:
     metadata:
       labels:
-        app: v1-validator1  # +operator-builder:field:parent=metadata.name,type=string
+        app: v1-validator1 # +operator-builder:field:parent=metadata.name,type=string
         v1-purpose: validator
     spec:
       containers:
         - name: pocket
-          image: poktnetwork/pocket-v1:main-dev  # +operator-builder:field:name=pocketImage,type=string
+          image: ghcr.io/pokt-network/pocket-v1:main-dev # +operator-builder:field:name=pocketImage,type=string
           args:
             - pocket
             - -config=/configs/config.json
             - -genesis=/genesis.json
           ports:
-            - containerPort: 8221
-              name: pre2p
-            - containerPort: 8222
-              name: p2p
+            - containerPort: 8080 # +operator-builder:field:name=ports.consensus,type=int,default=8080
+              name: consensus
           volumeMounts:
             - name: config-volume
               mountPath: /configs
             - name: genesis-volume
               mountPath: /genesis.json
               subPath: genesis.json
-            - name: name-blockstore  # +operator-builder:field:parent=metadata.name,replace="name",type=string
+            - name: name-blockstore # +operator-builder:field:parent=metadata.name,replace="name",type=string
               mountPath: /blockstore
       volumes:
         - name: config-volume
           configMap:
-            name: name-config  # +operator-builder:field:parent=metadata.name,replace="name",type=string
+            name: name-config # +operator-builder:field:parent=metadata.name,replace="name",type=string
         - name: genesis-volume
           configMap:
-            name: name-genesis  # +operator-builder:collection:field:parent=metadata.name,replace="name",type=string
+            name: name-genesis # +operator-builder:collection:field:parent=metadata.name,replace="name",type=string
   volumeClaimTemplates:
     - metadata:
-        name: name-blockstore  # +operator-builder:field:parent=metadata.name,replace="name",type=string
+        name: name-blockstore # +operator-builder:field:parent=metadata.name,replace="name",type=string
       spec:
         accessModes: ["ReadWriteOnce"]
         resources:
@@ -55,27 +53,27 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: v1-validator1  # +operator-builder:field:parent=metadata.name,type=string
+  name: v1-validator1 # +operator-builder:field:parent=metadata.name,type=string
   namespace: default # +operator-builder:collection:field:parent=metadata.name,type=string
   labels:
-    app: v1-validator1  # +operator-builder:field:parent=metadata.name,type=string
+    app: v1-validator1 # +operator-builder:field:parent=metadata.name,type=string
 spec:
   ports:
-    - port: 8221
-      name: pre2p
-    - port: 8222
-      name: p2p
+    - port: 8080 # +operator-builder:field:name=ports.consensus,type=int,default=8080
+      name: consensus
   selector:
-    app: v1-validator1  # +operator-builder:field:parent=metadata.name,type=string
+    app: v1-validator1 # +operator-builder:field:parent=metadata.name,type=string
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: name-config  # +operator-builder:field:parent=metadata.name,type=string,replace="name"
+  name: name-config # +operator-builder:field:parent=metadata.name,type=string,replace="name"
   namespace: default # +operator-builder:collection:field:parent=metadata.name,type=string
 data:
-  # +operator-builder:field:name=privateKey,type=string,replace="privatekey"
-  # +operator-builder:field:parent=metadata.name,type=string,replace="dbservice"
+  # +operator-builder:field:name=privateKey,type=string,replace="privatekey",default="ccec19df8fe866280e41da68d52d0ecdb07b01e85eeef45f400fd3a89b71c26a79254a4bc46bf1182826145b0b01b48bab4240cd30e23ba90e4e5e6b56961c6d"
+  # +operator-builder:field:name=postgres_url,type=string,replace="MOCK_POSTGRES_URL",default="postgres://validator:postgres@pocket-database:5432/validatordb"
+  # +operator-builder:field:name=postgres_schema,type=string,replace="MOCK_POSTGRES_SCHEMA",default="validator"
+  # +operator-builder:field:name=ports.consensus,type=int,replace="consensus_port_value",default="8080"
   config.json: |
     {
       "base": {
@@ -88,18 +86,23 @@ data:
           "timeout_msec": 5000,
           "manual": true,
           "debug_time_between_steps_msec": 1000
-        }
+        },
+        "private_key": "privatekey"
       },
-      "utility": {},
+      "utility": {
+        "max_mempool_transaction_bytes": 1073741824,
+        "max_mempool_transactions": 9000
+      },
       "persistence": {
-        "postgres_url": "postgres://validator:postgres@dbservice-database:5432/validatordb",
-        "node_schema": "validator",
+        "postgres_url": "MOCK_POSTGRES_URL",
+        "node_schema": "MOCK_POSTGRES_SCHEMA",
         "block_store_path": "/blockstore"
       },
       "p2p": {
-        "consensus_port": 8080,
+        "consensus_port": consensus_port_value,
         "use_rain_tree": true,
-        "connection_type": 1
+        "is_empty_connection_type": false,
+        "private_key": "privatekey"
       },
       "telemetry": {
         "enabled": true,
@@ -107,4 +110,3 @@ data:
         "endpoint": "/metrics"
       }
     }
-

@@ -32,8 +32,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	nodesv1alpha1 "github.com/lander2k2/pocket-v1-operator/apis/nodes/v1alpha1"
-	nodescontrollers "github.com/lander2k2/pocket-v1-operator/controllers/nodes"
+	nodesv1alpha1 "github.com/pokt-network/pocket-operator/apis/nodes/v1alpha1"
+	nodescontrollers "github.com/pokt-network/pocket-operator/controllers/nodes"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -88,7 +88,7 @@ func main() {
 		Port:                   9443,
 		HealthProbeBindAddress: probeAddr,
 		LeaderElection:         enableLeaderElection,
-		LeaderElectionID:       "ba5258bf.pokt.network",
+		LeaderElectionID:       "67a7e069.pokt.network",
 	})
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")

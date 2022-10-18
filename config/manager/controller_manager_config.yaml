@@ -8,4 +8,4 @@ webhook:
   port: 9443
 leaderElection:
   leaderElect: true
-  resourceName: ba5258bf.pokt.network
+  resourceName: 67a7e069.pokt.network

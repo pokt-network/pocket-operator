@@ -1,4 +1,4 @@
-module github.com/lander2k2/pocket-v1-operator
+module github.com/pokt-network/pocket-operator
 
 go 1.17
 
