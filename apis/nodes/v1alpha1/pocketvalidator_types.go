@@ -43,31 +43,17 @@ type PocketValidatorSpec struct {
 	// if not exactly one collection is found.
 	Collection PocketValidatorCollectionSpec `json:"collection"`
 
-	// +kubebuilder:default=1
-	// +kubebuilder:validation:Optional
-	// (Default: 1)
-	ValidatorReplicas int `json:"validatorReplicas,omitempty"`
-
 	// +kubebuilder:validation:Required
 	PocketImage string `json:"pocketImage,omitempty"`
 
 	// +kubebuilder:validation:Optional
 	Ports PocketValidatorSpecPorts `json:"ports,omitempty"`
 
-	// +kubebuilder:default="ccec19df8fe866280e41da68d52d0ecdb07b01e85eeef45f400fd3a89b71c26a79254a4bc46bf1182826145b0b01b48bab4240cd30e23ba90e4e5e6b56961c6d"
 	// +kubebuilder:validation:Optional
-	// (Default: "ccec19df8fe866280e41da68d52d0ecdb07b01e85eeef45f400fd3a89b71c26a79254a4bc46bf1182826145b0b01b48bab4240cd30e23ba90e4e5e6b56961c6d")
-	PrivateKey string `json:"privateKey,omitempty"`
+	PrivateKey PocketValidatorSpecPrivateKey `json:"privateKey,omitempty"`
 
-	// +kubebuilder:default="postgres://validator:postgres@pocket-database:5432/validatordb"
 	// +kubebuilder:validation:Optional
-	// (Default: "postgres://validator:postgres@pocket-database:5432/validatordb")
-	Postgres_url string `json:"postgres_url,omitempty"`
-
-	// +kubebuilder:default="validator"
-	// +kubebuilder:validation:Optional
-	// (Default: "validator")
-	Postgres_schema string `json:"postgres_schema,omitempty"`
+	Postgres PocketValidatorSpecPostgres `json:"postgres,omitempty"`
 }
 
 type PocketValidatorCollectionSpec struct {
@@ -87,6 +73,69 @@ type PocketValidatorSpecPorts struct {
 	// +kubebuilder:validation:Optional
 	// (Default: 8080)
 	Consensus int `json:"consensus,omitempty"`
+}
+
+type PocketValidatorSpecPrivateKey struct {
+	// +kubebuilder:validation:Optional
+	SecretKeyRef PocketValidatorSpecPrivateKeySecretKeyRef `json:"secretKeyRef,omitempty"`
+}
+
+type PocketValidatorSpecPrivateKeySecretKeyRef struct {
+	// +kubebuilder:validation:Required
+	Name string `json:"name,omitempty"`
+
+	// +kubebuilder:validation:Required
+	Key string `json:"key,omitempty"`
+}
+
+type PocketValidatorSpecPostgres struct {
+	// +kubebuilder:validation:Optional
+	User PocketValidatorSpecPostgresUser `json:"user,omitempty"`
+
+	// +kubebuilder:validation:Optional
+	Password PocketValidatorSpecPostgresPassword `json:"password,omitempty"`
+
+	// +kubebuilder:validation:Required
+	Host string `json:"host,omitempty"`
+
+	// +kubebuilder:validation:Required
+	Port string `json:"port,omitempty"`
+
+	// +kubebuilder:default="validatordb"
+	// +kubebuilder:validation:Optional
+	// (Default: "validatordb")
+	Database string `json:"database,omitempty"`
+
+	// +kubebuilder:default="v1-validator1"
+	// +kubebuilder:validation:Optional
+	// (Default: "v1-validator1")
+	Schema string `json:"schema,omitempty"`
+}
+
+type PocketValidatorSpecPostgresUser struct {
+	// +kubebuilder:validation:Optional
+	SecretKeyRef PocketValidatorSpecPostgresUserSecretKeyRef `json:"secretKeyRef,omitempty"`
+}
+
+type PocketValidatorSpecPostgresUserSecretKeyRef struct {
+	// +kubebuilder:validation:Required
+	Name string `json:"name,omitempty"`
+
+	// +kubebuilder:validation:Required
+	Key string `json:"key,omitempty"`
+}
+
+type PocketValidatorSpecPostgresPassword struct {
+	// +kubebuilder:validation:Optional
+	SecretKeyRef PocketValidatorSpecPostgresPasswordSecretKeyRef `json:"secretKeyRef,omitempty"`
+}
+
+type PocketValidatorSpecPostgresPasswordSecretKeyRef struct {
+	// +kubebuilder:validation:Required
+	Name string `json:"name,omitempty"`
+
+	// +kubebuilder:validation:Required
+	Key string `json:"key,omitempty"`
 }
 
 // PocketValidatorStatus defines the observed state of PocketValidator.

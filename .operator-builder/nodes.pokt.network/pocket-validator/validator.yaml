@@ -9,7 +9,7 @@ spec:
     matchLabels:
       app: v1-validator1 # +operator-builder:field:parent=metadata.name,type=string
   serviceName: v1-validator1 # +operator-builder:field:parent=metadata.name,type=string
-  replicas: 1 # +operator-builder:field:name=validatorReplicas,type=int,default=1
+  replicas: 1 # we can't really scale validators, because of 1:1 relationship with the private key
   template:
     metadata:
       labels:
@@ -26,6 +26,45 @@ spec:
           ports:
             - containerPort: 8080 # +operator-builder:field:name=ports.consensus,type=int,default=8080
               name: consensus
+          env:
+            - name: POCKET_BASE_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: v1-validator1 # +operator-builder:field:name=privateKey.secretKeyRef.name,type=string
+                  key: private_key # +operator-builder:field:name=privateKey.secretKeyRef.key,type=string
+            - name: POCKET_CONSENSUS_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: v1-validator1 # +operator-builder:field:name=privateKey.secretKeyRef.name,type=string
+                  key: private_key # +operator-builder:field:name=privateKey.secretKeyRef.key,type=string
+            - name: POCKET_P2P_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: v1-validator1 # +operator-builder:field:name=privateKey.secretKeyRef.name,type=string
+                  key: private_key # +operator-builder:field:name=privateKey.secretKeyRef.key,type=string
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials # +operator-builder:field:name=postgres.user.secretKeyRef.name,type=string
+                  key: username # +operator-builder:field:name=postgres.user.secretKeyRef.key,type=string
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials # +operator-builder:field:name=postgres.password.secretKeyRef.name,type=string
+                  key: password # +operator-builder:field:name=postgres.password.secretKeyRef.key,type=string
+              # TODO(@okdas): switch to `valueFrom`, which allows for a secretKeyRef and configMapKeyRef
+            - name: POSTGRES_HOST
+              value: postgres-host # +operator-builder:field:name=postgres.host,type=string
+              # TODO(@okdas): switch to `valueFrom`, which allows for a secretKeyRef and configMapKeyRef
+            - name: POSTGRES_PORT
+              value: "5432" # +operator-builder:field:name=postgres.port,type=string
+              # TODO(@okdas): switch to `valueFrom`, which allows for a secretKeyRef and configMapKeyRef
+            - name: POSTGRES_DB
+              value: "validatordb" # +operator-builder:field:name=postgres.database,type=string,default="validatordb"
+            - name: POCKET_PERSISTENCE_POSTGRES_URL
+              value: "postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DB)"
+            - name: POCKET_PERSISTENCE_NODE_SCHEMA
+              value: v1-validator1 # +operator-builder:field:name=postgres.schema,type=string,default="v1-validator1"
           volumeMounts:
             - name: config-volume
               mountPath: /configs
@@ -70,15 +109,12 @@ metadata:
   name: name-config # +operator-builder:field:parent=metadata.name,type=string,replace="name"
   namespace: default # +operator-builder:collection:field:parent=metadata.name,type=string
 data:
-  # +operator-builder:field:name=privateKey,type=string,replace="privatekey",default="ccec19df8fe866280e41da68d52d0ecdb07b01e85eeef45f400fd3a89b71c26a79254a4bc46bf1182826145b0b01b48bab4240cd30e23ba90e4e5e6b56961c6d"
-  # +operator-builder:field:name=postgres_url,type=string,replace="MOCK_POSTGRES_URL",default="postgres://validator:postgres@pocket-database:5432/validatordb"
-  # +operator-builder:field:name=postgres_schema,type=string,replace="MOCK_POSTGRES_SCHEMA",default="validator"
   # +operator-builder:field:name=ports.consensus,type=int,replace="consensus_port_value",default="8080"
   config.json: |
     {
       "base": {
         "root_directory": "/go/src/github.com/pocket-network",
-        "private_key": "privatekey"
+        "private_key": ""
       },
       "consensus": {
         "max_mempool_bytes": 500000000,
@@ -87,22 +123,22 @@ data:
           "manual": true,
           "debug_time_between_steps_msec": 1000
         },
-        "private_key": "privatekey"
+        "private_key": ""
       },
       "utility": {
         "max_mempool_transaction_bytes": 1073741824,
         "max_mempool_transactions": 9000
       },
       "persistence": {
-        "postgres_url": "MOCK_POSTGRES_URL",
-        "node_schema": "MOCK_POSTGRES_SCHEMA",
+        "postgres_url": "",
+        "node_schema": "validator",
         "block_store_path": "/blockstore"
       },
       "p2p": {
         "consensus_port": consensus_port_value,
         "use_rain_tree": true,
         "is_empty_connection_type": false,
-        "private_key": "privatekey"
+        "private_key": ""
       },
       "telemetry": {
         "enabled": true,
