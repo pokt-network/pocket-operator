@@ -61,7 +61,6 @@ func CreateStatefulSetCollectionNameParentName(
 						},
 					},
 					"spec": map[string]interface{}{
-						// imagePullPolicy: Always
 						"containers": []interface{}{
 							map[string]interface{}{
 								"name":  "pocket",

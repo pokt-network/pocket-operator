@@ -31,7 +31,9 @@ import (
 	"github.com/pokt-network/pocket-operator/apis/nodes/v1alpha1/pocketvalidator"
 )
 
+//
 // nodesv1alpha1PocketValidator tests
+//
 func nodesv1alpha1PocketValidatorChildrenFuncs(tester *E2ETest) error {
 	// TODO: need to run r.GetResources(request) on the reconciler to get the mutated resources
 	if len(pocketvalidator.CreateFuncs) == 0 {
