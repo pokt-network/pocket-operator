@@ -9,7 +9,7 @@ CMD ["/manager"]
 '''
 
 def yaml():
-    return local('make kustomize && cd config/manager; ../../bin/kustomize edit set image controller=' + IMAGE_NAME + '; cd ../..; ./bin/kustomize build config/default')
+    return local('make kustomize && cd config/manager; ../../bin/kustomize edit set image controller=' + IMAGE_NAME + '; cd ../..; ./bin/kustomize build config/default', quiet = True)
 
 def binary():
     return 'GOOS=linux go build -o bin/manager main.go'
@@ -24,7 +24,7 @@ deps = ['controllers', 'main.go']
 deps.append('api')
 deps.append('internal')
 
-local_resource('Operator: Watch&Compile', "make generate; " + binary() , deps=deps, ignore=['*/*/zz_generated.deepcopy.go'])
+local_resource('Operator: Watch & Compile', "make generate; " + binary() , deps=deps, ignore=['*/*/zz_generated.deepcopy.go'])
 
 docker_build_with_restart(IMAGE_NAME, '.',
     dockerfile_contents=DOCKERFILE,
