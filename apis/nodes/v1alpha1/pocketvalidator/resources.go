@@ -36,9 +36,11 @@ spec:
   #collection:
     #name: "pocketset-sample"
     #namespace: ""
+  prometheusScrape: false
   pocketImage: "ghcr.io/pokt-network/pocket-v1:main-dev"
   ports:
     consensus: 8080
+    rpc: 50832
   privateKey:
     secretKeyRef:
       name: "v1-validator1"

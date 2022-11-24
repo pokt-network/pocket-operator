@@ -43,6 +43,11 @@ type PocketValidatorSpec struct {
 	// if not exactly one collection is found.
 	Collection PocketValidatorCollectionSpec `json:"collection"`
 
+	// +kubebuilder:default=false
+	// +kubebuilder:validation:Optional
+	// (Default: false)
+	PrometheusScrape bool `json:"prometheusScrape,omitempty"`
+
 	// +kubebuilder:validation:Required
 	PocketImage string `json:"pocketImage,omitempty"`
 
@@ -73,6 +78,11 @@ type PocketValidatorSpecPorts struct {
 	// +kubebuilder:validation:Optional
 	// (Default: 8080)
 	Consensus int `json:"consensus,omitempty"`
+
+	// +kubebuilder:default=50832
+	// +kubebuilder:validation:Optional
+	// (Default: 50832)
+	Rpc int `json:"rpc,omitempty"`
 }
 
 type PocketValidatorSpecPrivateKey struct {

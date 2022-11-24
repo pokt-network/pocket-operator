@@ -12,6 +12,10 @@ spec:
   replicas: 1 # we can't really scale validators, because of 1:1 relationship with the private key
   template:
     metadata:
+      annotations:
+        # +operator-builder:field:name=prometheusScrape,type=bool,replace="false",default=false
+        prometheus.io/scrape: "false"
+        prometheus.io/port: "9000"
       labels:
         app: v1-validator1 # +operator-builder:field:parent=metadata.name,type=string
         v1-purpose: validator
@@ -26,6 +30,8 @@ spec:
           ports:
             - containerPort: 8080 # +operator-builder:field:name=ports.consensus,type=int,default=8080
               name: consensus
+            - containerPort: 50832 # +operator-builder:field:name=ports.rpc,type=int,default=50832
+              name: rpc
           env:
             - name: POCKET_BASE_PRIVATE_KEY
               valueFrom:
@@ -100,6 +106,8 @@ spec:
   ports:
     - port: 8080 # +operator-builder:field:name=ports.consensus,type=int,default=8080
       name: consensus
+    - port: 50832 # +operator-builder:field:name=ports.rpc,type=int,default=50832
+      name: rpc
   selector:
     app: v1-validator1 # +operator-builder:field:parent=metadata.name,type=string
 ---
@@ -110,6 +118,7 @@ metadata:
   namespace: default # +operator-builder:collection:field:parent=metadata.name,type=string
 data:
   # +operator-builder:field:name=ports.consensus,type=int,replace="consensus_port_value",default="8080"
+  # +operator-builder:field:name=ports.rpc,type=int,replace="rpc_port_value",default="50832"
   config.json: |
     {
       "base": {
@@ -144,5 +153,11 @@ data:
         "enabled": true,
         "address": "0.0.0.0:9000",
         "endpoint": "/metrics"
+      },
+      "rpc": {
+        "enabled": true,
+        "port": "rpc_port_value",
+        "timeout": 30000,
+        "use_cors": false
       }
     }

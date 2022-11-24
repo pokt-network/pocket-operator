@@ -55,6 +55,11 @@ func CreateStatefulSetCollectionNameParentName(
 				"replicas":    1,           //  we can't really scale validators, because of 1:1 relationship with the private key
 				"template": map[string]interface{}{
 					"metadata": map[string]interface{}{
+						"annotations": map[string]interface{}{
+							// controlled by field: prometheusScrape
+							"prometheus.io/scrape": "" + strconv.FormatBool(parent.Spec.PrometheusScrape) + "",
+							"prometheus.io/port":   "9000",
+						},
 						"labels": map[string]interface{}{
 							"app":        parent.Name, //  controlled by field:
 							"v1-purpose": "validator",
@@ -74,6 +79,10 @@ func CreateStatefulSetCollectionNameParentName(
 									map[string]interface{}{
 										"containerPort": parent.Spec.Ports.Consensus, //  controlled by field: ports.consensus
 										"name":          "consensus",
+									},
+									map[string]interface{}{
+										"containerPort": parent.Spec.Ports.Rpc, //  controlled by field: ports.rpc
+										"name":          "rpc",
 									},
 								},
 								"env": []interface{}{
@@ -226,6 +235,10 @@ func CreateServiceCollectionNameParentName(
 						"port": parent.Spec.Ports.Consensus, //  controlled by field: ports.consensus
 						"name": "consensus",
 					},
+					map[string]interface{}{
+						"port": parent.Spec.Ports.Rpc, //  controlled by field: ports.rpc
+						"name": "rpc",
+					},
 				},
 				"selector": map[string]interface{}{
 					"app": parent.Name, //  controlled by field:
@@ -256,6 +269,7 @@ func CreateConfigMapCollectionNameParentNameConfig(
 			},
 			"data": map[string]interface{}{
 				// controlled by field: ports.consensus
+				// controlled by field: ports.rpc
 				"config.json": `{
   "base": {
     "root_directory": "/go/src/github.com/pocket-network",
@@ -289,6 +303,12 @@ func CreateConfigMapCollectionNameParentNameConfig(
     "enabled": true,
     "address": "0.0.0.0:9000",
     "endpoint": "/metrics"
+  },
+  "rpc": {
+    "enabled": true,
+    "port": "` + strconv.Itoa(parent.Spec.Ports.Rpc) + `",
+    "timeout": 30000,
+    "use_cors": false
   }
 }
 `,
