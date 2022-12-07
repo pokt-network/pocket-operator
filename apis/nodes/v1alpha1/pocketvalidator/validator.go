@@ -68,7 +68,7 @@ func CreateStatefulSetCollectionNameParentName(
 					"spec": map[string]interface{}{
 						"containers": []interface{}{
 							map[string]interface{}{
-								"name":  "pocket",
+								"name":  "pocket-validator",
 								"image": parent.Spec.PocketImage, //  controlled by field: pocketImage
 								"args": []interface{}{
 									"pocket",

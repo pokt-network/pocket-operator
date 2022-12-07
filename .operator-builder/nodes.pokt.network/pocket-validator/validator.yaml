@@ -21,7 +21,7 @@ spec:
         v1-purpose: validator
     spec:
       containers:
-        - name: pocket
+        - name: pocket-validator
           image: ghcr.io/pokt-network/pocket-v1:main-dev # +operator-builder:field:name=pocketImage,type=string
           args:
             - pocket
