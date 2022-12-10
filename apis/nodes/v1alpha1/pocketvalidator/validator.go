@@ -51,10 +51,15 @@ func CreateStatefulSetCollectionNameParentName(
 						"app": parent.Name, //  controlled by field:
 					},
 				},
-				"serviceName": parent.Name,                   //  controlled by field:
-				"replicas":    parent.Spec.ValidatorReplicas, //  controlled by field: validatorReplicas
+				"serviceName": parent.Name, //  controlled by field:
+				"replicas":    1,           //  we can't really scale validators, because of 1:1 relationship with the private key
 				"template": map[string]interface{}{
 					"metadata": map[string]interface{}{
+						"annotations": map[string]interface{}{
+							// controlled by field: prometheusScrape
+							"prometheus.io/scrape": "" + strconv.FormatBool(parent.Spec.PrometheusScrape) + "",
+							"prometheus.io/port":   "9000",
+						},
 						"labels": map[string]interface{}{
 							"app":        parent.Name, //  controlled by field:
 							"v1-purpose": "validator",
@@ -63,7 +68,7 @@ func CreateStatefulSetCollectionNameParentName(
 					"spec": map[string]interface{}{
 						"containers": []interface{}{
 							map[string]interface{}{
-								"name":  "pocket",
+								"name":  "pocket-validator",
 								"image": parent.Spec.PocketImage, //  controlled by field: pocketImage
 								"args": []interface{}{
 									"pocket",
@@ -74,6 +79,77 @@ func CreateStatefulSetCollectionNameParentName(
 									map[string]interface{}{
 										"containerPort": parent.Spec.Ports.Consensus, //  controlled by field: ports.consensus
 										"name":          "consensus",
+									},
+									map[string]interface{}{
+										"containerPort": parent.Spec.Ports.Rpc, //  controlled by field: ports.rpc
+										"name":          "rpc",
+									},
+								},
+								"env": []interface{}{
+									map[string]interface{}{
+										"name": "POCKET_BASE_PRIVATE_KEY",
+										"valueFrom": map[string]interface{}{
+											"secretKeyRef": map[string]interface{}{
+												"name": parent.Spec.PrivateKey.SecretKeyRef.Name, //  controlled by field: privateKey.secretKeyRef.name
+												"key":  parent.Spec.PrivateKey.SecretKeyRef.Key,  //  controlled by field: privateKey.secretKeyRef.key
+											},
+										},
+									},
+									map[string]interface{}{
+										"name": "POCKET_CONSENSUS_PRIVATE_KEY",
+										"valueFrom": map[string]interface{}{
+											"secretKeyRef": map[string]interface{}{
+												"name": parent.Spec.PrivateKey.SecretKeyRef.Name, //  controlled by field: privateKey.secretKeyRef.name
+												"key":  parent.Spec.PrivateKey.SecretKeyRef.Key,  //  controlled by field: privateKey.secretKeyRef.key
+											},
+										},
+									},
+									map[string]interface{}{
+										"name": "POCKET_P2P_PRIVATE_KEY",
+										"valueFrom": map[string]interface{}{
+											"secretKeyRef": map[string]interface{}{
+												"name": parent.Spec.PrivateKey.SecretKeyRef.Name, //  controlled by field: privateKey.secretKeyRef.name
+												"key":  parent.Spec.PrivateKey.SecretKeyRef.Key,  //  controlled by field: privateKey.secretKeyRef.key
+											},
+										},
+									},
+									map[string]interface{}{
+										"name": "POSTGRES_USER",
+										"valueFrom": map[string]interface{}{
+											"secretKeyRef": map[string]interface{}{
+												"name": parent.Spec.Postgres.User.SecretKeyRef.Name, //  controlled by field: postgres.user.secretKeyRef.name
+												"key":  parent.Spec.Postgres.User.SecretKeyRef.Key,  //  controlled by field: postgres.user.secretKeyRef.key
+											},
+										},
+									},
+									map[string]interface{}{
+										"name": "POSTGRES_PASSWORD",
+										"valueFrom": map[string]interface{}{
+											"secretKeyRef": map[string]interface{}{
+												"name": parent.Spec.Postgres.Password.SecretKeyRef.Name, //  controlled by field: postgres.password.secretKeyRef.name
+												"key":  parent.Spec.Postgres.Password.SecretKeyRef.Key,  //  controlled by field: postgres.password.secretKeyRef.key
+											},
+										},
+									},
+									map[string]interface{}{
+										"name":  "POSTGRES_HOST",
+										"value": parent.Spec.Postgres.Host, //  controlled by field: postgres.host
+									},
+									map[string]interface{}{
+										"name":  "POSTGRES_PORT",
+										"value": parent.Spec.Postgres.Port, //  controlled by field: postgres.port
+									},
+									map[string]interface{}{
+										"name":  "POSTGRES_DB",
+										"value": parent.Spec.Postgres.Database, //  controlled by field: postgres.database
+									},
+									map[string]interface{}{
+										"name":  "POCKET_PERSISTENCE_POSTGRES_URL",
+										"value": "postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DB)",
+									},
+									map[string]interface{}{
+										"name":  "POCKET_PERSISTENCE_NODE_SCHEMA",
+										"value": parent.Spec.Postgres.Schema, //  controlled by field: postgres.schema
 									},
 								},
 								"volumeMounts": []interface{}{
@@ -159,6 +235,10 @@ func CreateServiceCollectionNameParentName(
 						"port": parent.Spec.Ports.Consensus, //  controlled by field: ports.consensus
 						"name": "consensus",
 					},
+					map[string]interface{}{
+						"port": parent.Spec.Ports.Rpc, //  controlled by field: ports.rpc
+						"name": "rpc",
+					},
 				},
 				"selector": map[string]interface{}{
 					"app": parent.Name, //  controlled by field:
@@ -188,14 +268,12 @@ func CreateConfigMapCollectionNameParentNameConfig(
 				"namespace": collection.Name,              //  controlled by collection field:
 			},
 			"data": map[string]interface{}{
-				// controlled by field: privateKey
-				// controlled by field: postgres_url
-				// controlled by field: postgres_schema
 				// controlled by field: ports.consensus
+				// controlled by field: ports.rpc
 				"config.json": `{
   "base": {
     "root_directory": "/go/src/github.com/pocket-network",
-    "private_key": "` + parent.Spec.PrivateKey + `"
+    "private_key": ""
   },
   "consensus": {
     "max_mempool_bytes": 500000000,
@@ -204,27 +282,33 @@ func CreateConfigMapCollectionNameParentNameConfig(
       "manual": true,
       "debug_time_between_steps_msec": 1000
     },
-    "private_key": "` + parent.Spec.PrivateKey + `"
+    "private_key": ""
   },
   "utility": {
     "max_mempool_transaction_bytes": 1073741824,
     "max_mempool_transactions": 9000
   },
   "persistence": {
-    "postgres_url": "` + parent.Spec.Postgres_url + `",
-    "node_schema": "` + parent.Spec.Postgres_schema + `",
+    "postgres_url": "",
+    "node_schema": "validator",
     "block_store_path": "/blockstore"
   },
   "p2p": {
     "consensus_port": ` + strconv.Itoa(parent.Spec.Ports.Consensus) + `,
     "use_rain_tree": true,
     "is_empty_connection_type": false,
-    "private_key": "` + parent.Spec.PrivateKey + `"
+    "private_key": ""
   },
   "telemetry": {
     "enabled": true,
     "address": "0.0.0.0:9000",
     "endpoint": "/metrics"
+  },
+  "rpc": {
+    "enabled": true,
+    "port": "` + strconv.Itoa(parent.Spec.Ports.Rpc) + `",
+    "timeout": 30000,
+    "use_cors": false
   }
 }
 `,

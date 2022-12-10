@@ -119,7 +119,9 @@ var deletableWhitelist = []string{
 	"StorageClass",
 }
 
+//
 // test entrypoint
+//
 func TestMain(t *testing.T) {
 	// setup the test suite
 	e2eTestSuite := new(E2ETestSuiteConfig)
@@ -252,6 +254,7 @@ func (tester *E2ETest) setup() error {
 	return nil
 }
 
+//
 // deploy
 //
 // DEPLOY="true" will run all tasks to deploy into the cluster to include:
@@ -263,6 +266,7 @@ func (tester *E2ETest) setup() error {
 // DEPLOY_IN_CLUSTER="true" ensures that the controller is running before proceeding.
 // if this option is not used, a separate process such as the 'make run' target
 // should be handling the controller functions for the test.
+//
 func deploy(s *E2ETestSuiteConfig) error {
 	// install crds
 	if os.Getenv("DEPLOY") == "true" {
@@ -367,7 +371,9 @@ func (s *E2EComponentTestSuite) teardown() {
 	}
 }
 
+//
 // helpers
+//
 func readYamlManifest(path string, destination *unstructured.Unstructured) ([]byte, error) {
 	// read the yaml file
 	yamlFile, err := os.ReadFile(path)
@@ -747,7 +753,9 @@ func waitFor(isReady readyChecker) error {
 	}
 }
 
+//
 // tests
+//
 func testCreateCustomResource(tester *E2ETest) error {
 	_, err := getClientForResource(tester, tester.unstructured).
 		Create(context.TODO(), tester.unstructured, metav1.CreateOptions{})

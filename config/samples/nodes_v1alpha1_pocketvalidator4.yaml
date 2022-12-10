@@ -5,9 +5,29 @@ metadata:
 spec:
   collection:
     name: "primary"
-  validatorReplicas: 1
-  # TODO: once we have this available via envar, make a secretRef
-  postgres_url: postgres://validator:EgSGBwwdcy4CWg5Oy8VxsFg1Yd2INukyr1xyvBKeTagxH0zeciq34SBy1IPCNdmm@pocket-database:5432/validatordb
-  postgres_schema: validator4
-  pocketImage: "ghcr.io/pokt-network/pocket-v1:sha-87a6060-dev"
-  privateKey: "c6c136d010d07d7f5e9944aa3594a10f9210dd3e26ebc1bc1516a6d957fd0df353ee26c82826694ffe1773d7b60d5f20dd9e91bdf8745544711bec5ff9c6fb4a"
+  pocketImage: "ghcr.io/pokt-network/pocket-v1:sha-f0400e8-dev"
+  privateKey:
+    secretKeyRef:
+      name: v1-validator4
+      key: private_key
+  postgres:
+    user:
+      secretKeyRef:
+        name: validator.pocket-database.credentials.postgresql.acid.zalan.do
+        key: username
+    password:
+      secretKeyRef:
+        name: validator.pocket-database.credentials.postgresql.acid.zalan.do
+        key: password
+    host: pocket-database
+    port: "5432"
+    database: validatordb
+    schema: validator4
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: v1-validator4
+type: Opaque
+stringData:
+  private_key: "c6c136d010d07d7f5e9944aa3594a10f9210dd3e26ebc1bc1516a6d957fd0df353ee26c82826694ffe1773d7b60d5f20dd9e91bdf8745544711bec5ff9c6fb4a"

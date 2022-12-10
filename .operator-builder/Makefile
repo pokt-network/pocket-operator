@@ -40,5 +40,6 @@ checkout:
 		../CONTRIBUTING.md \
 		../LICENSE.md \
 		../README.md \
-		../.gitignore
+		../.gitignore \
+		../Tiltfile
 
