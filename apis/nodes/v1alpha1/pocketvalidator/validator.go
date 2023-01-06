@@ -1,5 +1,5 @@
 /*
-Copyright 2022.
+Copyright 2023.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -37,6 +37,7 @@ func CreateStatefulSetCollectionNameParentName(
 	reconciler workload.Reconciler,
 	req *workload.Request,
 ) ([]client.Object, error) {
+
 	var resourceObj = &unstructured.Unstructured{
 		Object: map[string]interface{}{
 			"apiVersion": "apps/v1",
@@ -218,6 +219,7 @@ func CreateServiceCollectionNameParentName(
 	reconciler workload.Reconciler,
 	req *workload.Request,
 ) ([]client.Object, error) {
+
 	var resourceObj = &unstructured.Unstructured{
 		Object: map[string]interface{}{
 			"apiVersion": "v1",
@@ -259,6 +261,7 @@ func CreateConfigMapCollectionNameParentNameConfig(
 	reconciler workload.Reconciler,
 	req *workload.Request,
 ) ([]client.Object, error) {
+
 	var resourceObj = &unstructured.Unstructured{
 		Object: map[string]interface{}{
 			"apiVersion": "v1",
@@ -271,10 +274,8 @@ func CreateConfigMapCollectionNameParentNameConfig(
 				// controlled by field: ports.consensus
 				// controlled by field: ports.rpc
 				"config.json": `{
-  "base": {
-    "root_directory": "/go/src/github.com/pocket-network",
-    "private_key": ""
-  },
+  "root_directory": "/go/src/github.com/pocket-network",
+  "private_key": ""
   "consensus": {
     "max_mempool_bytes": 500000000,
     "pacemaker_config": {
