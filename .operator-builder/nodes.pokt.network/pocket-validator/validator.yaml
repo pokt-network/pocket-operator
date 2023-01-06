@@ -121,10 +121,8 @@ data:
   # +operator-builder:field:name=ports.rpc,type=int,replace="rpc_port_value",default="50832"
   config.json: |
     {
-      "base": {
-        "root_directory": "/go/src/github.com/pocket-network",
-        "private_key": ""
-      },
+      "root_directory": "/go/src/github.com/pocket-network",
+      "private_key": ""
       "consensus": {
         "max_mempool_bytes": 500000000,
         "pacemaker_config": {

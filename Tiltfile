@@ -20,11 +20,16 @@ local_resource('Operator: CRDs', "make manifests; make install", deps=["api"])
 
 k8s_yaml(yaml())
 
-deps = ['controllers', 'main.go']
-deps.append('api')
-deps.append('internal')
+### Monitors for changes in .operator-builder directory and rebuilds the operator from template
 
-local_resource('Operator: Watch & Compile', "make generate; " + binary() , deps=deps, ignore=['*/*/zz_generated.deepcopy.go'])
+operator_builder_deps = ['.operator-builder/nodes.pokt.network']
+local_resource('Operator: operator-builder watch & template', "cd .operator-builder && make operator-build", deps=operator_builder_deps)
+
+### Builds and updates the operator binary on cluster
+
+kubebuilder_deps = ['controllers', 'main.go', 'api', 'internal']
+
+local_resource('Operator: kubebuilder Watch & Compile', "make generate; " + binary() , deps=kubebuilder_deps, ignore=['*/*/zz_generated.deepcopy.go'])
 
 docker_build_with_restart(IMAGE_NAME, '.',
     dockerfile_contents=DOCKERFILE,
