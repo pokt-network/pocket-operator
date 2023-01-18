@@ -275,7 +275,7 @@ func CreateConfigMapCollectionNameParentNameConfig(
 				// controlled by field: ports.rpc
 				"config.json": `{
   "root_directory": "/go/src/github.com/pocket-network",
-  "private_key": ""
+  "private_key": "",
   "consensus": {
     "max_mempool_bytes": 500000000,
     "pacemaker_config": {
