@@ -13,15 +13,15 @@ spec:
   postgres:
     user:
       secretKeyRef:
-        name: validator.pocket-database.credentials.postgresql.acid.zalan.do
+        name: pocket-postgres-postgresql
         key: username
     password:
       secretKeyRef:
-        name: validator.pocket-database.credentials.postgresql.acid.zalan.do
+        name: pocket-postgres-postgresql
         key: password
-    host: pocket-database
+    host: pocket-postgres-postgresql
     port: "5432"
-    database: validatordb
+    database: postgres
     schema: validator1
 ---
 apiVersion: v1
