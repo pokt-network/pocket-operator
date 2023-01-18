@@ -16,7 +16,7 @@ metadata:
 type: Opaque
 stringData:
   username: postgres
-  password: LocalNetPassword
+  postgres-password: LocalNetPassword
   # We don't auto-generate LDAP password when it's not provided as we do for other passwords
 ---
 # Source: postgresql/templates/primary/svc-headless.yaml

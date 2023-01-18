@@ -57,7 +57,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: postgres-credentials # +operator-builder:field:name=postgres.password.secretKeyRef.name,type=string
-                  key: password # +operator-builder:field:name=postgres.password.secretKeyRef.key,type=string
+                  key: postgres-password # +operator-builder:field:name=postgres.password.secretKeyRef.key,type=string
               # TODO(@okdas): switch to `valueFrom`, which allows for a secretKeyRef and configMapKeyRef
             - name: POSTGRES_HOST
               value: postgres-host # +operator-builder:field:name=postgres.host,type=string

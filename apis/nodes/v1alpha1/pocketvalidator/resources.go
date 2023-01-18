@@ -53,7 +53,7 @@ spec:
     password:
       secretKeyRef:
         name: "postgres-credentials"
-        key: "password"
+        key: "postgres-password"
     host: "postgres-host"
     port: "5432"
     database: "validatordb"
@@ -82,7 +82,7 @@ spec:
     password:
       secretKeyRef:
         name: "postgres-credentials"
-        key: "password"
+        key: "postgres-password"
     host: "postgres-host"
     port: "5432"
 `

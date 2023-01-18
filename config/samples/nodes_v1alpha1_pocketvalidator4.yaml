@@ -4,7 +4,7 @@ metadata:
   name: v1-validator4
 spec:
   collection:
-    name: "primary"
+    name: default
   pocketImage: "ghcr.io/pokt-network/pocket-v1:sha-f0400e8-dev"
   privateKey:
     secretKeyRef:
@@ -18,7 +18,7 @@ spec:
     password:
       secretKeyRef:
         name: pocket-postgres-postgresql
-        key: password
+        key: postgres-password
     host: pocket-postgres-postgresql
     port: "5432"
     database: postgres
