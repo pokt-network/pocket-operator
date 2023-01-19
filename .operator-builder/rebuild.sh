@@ -17,9 +17,6 @@ cd "${TMP_DIR}"
 ls -la
 operator-builder ${INIT_OPTS}
 operator-builder ${CREATE_OPTS}
-# FILES=$()
 
+# Copy the generated files to the current directory
 ls -a | grep -Ev "(${MOVE_EXCEPTIONS_REGEX})" | xargs -I {} cp -R {} "${CURRENT_DIR}/.."
-# cd "${CURRENT_DIR}"
-
-# rm -rf "${TMP_DIR_PARENT}"

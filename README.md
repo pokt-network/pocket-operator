@@ -35,7 +35,7 @@ This operator was built with
 
 # ⚠️ Under active development
 
-We are currently working on the first release of the operator. That means, the API and CRD are subject to change.  We will be updating this README as we make progress. Not production ready. Expect issues.
+We are currently working on the first release of the operator. That means the API and CRD are subject to change - in fact they most certainly are going to be changed. We will be updating this README as we make progress. Not production ready. Expect issues.
 
 ## Installation
 
@@ -49,7 +49,7 @@ kustomize build "https://github.com/pokt-network/pocket-operator//config/default
 
 Please see the supported Custom Resource Definitions (CRDs) in the [config/crd](config/crd) directory.
 
-We do not ship Postgres database with this operator, it is up to a user to chose a way to run the database. Please check out examples in the [config/samples](config/samples) directory for one non-replicated Postgres deployment.
+We do not ship Postgres database with this operator, it is up to a user to choose a way to run the database. We suggest to utilize Postgres Operators such as [CrunchyData](https://github.com/CrunchyData/postgres-operator) or [zalando's postgres-operator](https://github.com/zalando/postgres-operator) for that purpose due to additional availability guarantees (replications, backups, etc). We do have an example in the [config/samples](config/samples) directory for one non-replicated Postgres deployment. Once this product matures, we are going to publish a step-by-step guide with a recommended way to deploy postgres operators.
 
 Examples can be found in the [config/samples](config/samples) directory.
 
