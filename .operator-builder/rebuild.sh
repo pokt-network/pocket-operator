@@ -10,7 +10,7 @@ TMP_DIR=$(mkdir -p ${TMP_DIR_PARENT}/pocket-operator && echo ${TMP_DIR_PARENT}/p
 CURRENT_DIR=$(pwd)
 ln -s "${CURRENT_DIR}" "${TMP_DIR}/.operator-builder"
 
-INIT_OPTS="init --workload-config=.operator-builder/workload.yaml --repo github.com/pokt-network/pocket-operator --controller-image pokt-network/pocket-operator:latest --skip-go-version-check"
+INIT_OPTS="init --workload-config=.operator-builder/workload.yaml --repo github.com/pokt-network/pocket-operator --controller-image ghcr.io/pokt-network/pocket-operator:latest --skip-go-version-check"
 CREATE_OPTS="create api --workload-config .operator-builder/workload.yaml --controller --resource"
 
 cd "${TMP_DIR}"

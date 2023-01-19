@@ -1,7 +1,7 @@
 INIT_OPTS=init \
 	--workload-config .operator-builder/workload.yaml \
    	--repo github.com/pokt-network/pocket-operator \
-	--controller-image pokt-network/pocket-operator:latest \
+	--controller-image ghcr.io/pokt-network/pocket-operator:latest \
     --skip-go-version-check
 
 CREATE_OPTS=create api \

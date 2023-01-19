@@ -15,8 +15,8 @@ limitations under the License.
 */
 
 // Package v1alpha1 contains API Schema definitions for the nodes v1alpha1 API group
-//+kubebuilder:object:generate=true
-//+groupName=nodes.pokt.network
+// +kubebuilder:object:generate=true
+// +groupName=nodes.pokt.network
 package v1alpha1
 
 import (

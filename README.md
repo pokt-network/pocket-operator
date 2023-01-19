@@ -33,6 +33,27 @@ and delete pocket nodes using custom resources.
 This operator was built with
 [operator-builder](https://github.com/nukleros/operator-builder).
 
+# ⚠️ Under active development
+
+We are currently working on the first release of the operator. That means, the API and CRD are subject to change.  We will be updating this README as we make progress. Not production ready. Expect issues.
+
+## Installation
+
+We provide kustomize manifests for deploying the operator. To create manifests to deploy the latest version of operator, run the following command:
+
+```
+kustomize build "https://github.com/pokt-network/pocket-operator//config/default?ref=master"
+```
+
+## Usage
+
+Please see the supported Custom Resource Definitions (CRDs) in the [config/crd](config/crd) directory.
+
+We do not ship Postgres database with this operator, it is up to a user to chose a way to run the database. Please check out examples in the [config/samples](config/samples) directory for one non-replicated Postgres deployment.
+
+Examples can be found in the [config/samples](config/samples) directory.
+
+
 ## Local Development & Testing
 
 To install the custom resource/s for this operator, make sure you have a

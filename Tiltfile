@@ -7,6 +7,10 @@ COPY ./bin/manager /
 CMD ["/manager"]
 '''
 
+def copy_samples():
+    local('cp ./.operator-builder/samples/* ./config/samples')
+    return ''
+
 # Makes sure kustomize is installed and sets the image name (so tilt can intervene & control the container lifecycle)
 local('make kustomize')
 k8s_yaml(kustomize('config/default-localnet',  kustomize_bin='bin/kustomize'))
@@ -17,7 +21,9 @@ local_resource('operator-builder-watch-and-template', "cd .operator-builder && m
 
 ### Builds and updates the operator binary on cluster
 kubebuilder_deps = ['controllers', 'main.go', 'api', 'internal']
-local_resource('kubebuilder-watch-and-compile', "make generate; GOOS=linux go build -o bin/manager main.go", deps=kubebuilder_deps, ignore=['*/*/zz_generated.deepcopy.go'])
+local_resource('kubebuilder-watch-and-compile', "make generate; GOOS=linux go build -o bin/manager main.go" + copy_samples(), deps=kubebuilder_deps, ignore=['*/*/zz_generated.deepcopy.go'])
+
+local_resource('operator-builder-maintain-samples', "cd .operator-builder && make operator-samples", deps=['.operator-builder/samples/'])
 
 docker_build_with_restart(IMAGE_NAME, '.',
     dockerfile_contents=DOCKERFILE,

@@ -164,8 +164,8 @@ func CreateStatefulSetCollectionNameParentName(
 										"subPath":   "genesis.json",
 									},
 									map[string]interface{}{
-										"name":      "" + parent.Name + "-blockstore", //  controlled by field:
-										"mountPath": "/blockstore",
+										"name":      "validator-storage", //  controlled by field:
+										"mountPath": "/validator-storage",
 									},
 								},
 							},
@@ -189,7 +189,7 @@ func CreateStatefulSetCollectionNameParentName(
 				"volumeClaimTemplates": []interface{}{
 					map[string]interface{}{
 						"metadata": map[string]interface{}{
-							"name": "" + parent.Name + "-blockstore", //  controlled by field:
+							"name": "validator-storage", //  controlled by field:
 						},
 						"spec": map[string]interface{}{
 							"accessModes": []interface{}{
@@ -234,12 +234,16 @@ func CreateServiceCollectionNameParentName(
 			"spec": map[string]interface{}{
 				"ports": []interface{}{
 					map[string]interface{}{
-						"port": parent.Spec.Ports.Consensus, //  controlled by field: ports.consensus
-						"name": "consensus",
+						"port":       parent.Spec.Ports.Consensus, //  controlled by field: ports.consensus
+						"name":       "consensus",
+						"protocol":   "TCP",
+						"targetPort": "consensus",
 					},
 					map[string]interface{}{
-						"port": parent.Spec.Ports.Rpc, //  controlled by field: ports.rpc
-						"name": "rpc",
+						"port":       parent.Spec.Ports.Rpc, //  controlled by field: ports.rpc
+						"name":       "rpc",
+						"protocol":   "TCP",
+						"targetPort": "rpc",
 					},
 				},
 				"selector": map[string]interface{}{
@@ -292,18 +296,30 @@ func CreateConfigMapCollectionNameParentNameConfig(
   "persistence": {
     "postgres_url": "",
     "node_schema": "validator",
-    "block_store_path": "/blockstore"
+    "block_store_path": "/validator-storage/blockstore",
+    "tx_indexer_path": "",
+    "trees_store_dir": "/validator-storage/trees",
+    "max_conns_count": 8,
+    "min_conns_count": 0,
+    "max_conn_lifetime": "1h",
+    "max_conn_idle_time": "30m",
+    "health_check_period": "5m"
   },
   "p2p": {
     "consensus_port": ` + strconv.Itoa(parent.Spec.Ports.Consensus) + `,
     "use_rain_tree": true,
     "is_empty_connection_type": false,
-    "private_key": ""
+    "private_key": "",
+    "max_mempool_count": 100000
   },
   "telemetry": {
     "enabled": true,
     "address": "0.0.0.0:9000",
     "endpoint": "/metrics"
+  },
+  "logger": {
+    "level": "debug",
+    "format": "json"
   },
   "rpc": {
     "enabled": true,
