@@ -2,29 +2,28 @@ load('ext://restart_process', 'docker_build_with_restart')
 
 IMAGE_NAME = "pocket-operator"
 DOCKERFILE = '''FROM debian:bullseye
-USER 65532:65532
 WORKDIR /
 COPY ./bin/manager /
 CMD ["/manager"]
 '''
 
-def yaml():
-    return local('make kustomize && cd config/manager; ../../bin/kustomize edit set image controller=' + IMAGE_NAME + '; cd ../..; ./bin/kustomize build config/default', quiet = True)
+def copy_samples():
+    local('cp ./.operator-builder/samples/* ./config/samples')
+    return ''
 
-def binary():
-    return 'GOOS=linux go build -o bin/manager main.go'
+# Makes sure kustomize is installed and sets the image name (so tilt can intervene & control the container lifecycle)
+local('make kustomize')
+k8s_yaml(kustomize('config/default-localnet',  kustomize_bin='bin/kustomize'))
 
-local("make manifests; make generate")
+### Monitors for changes in .operator-builder directory and rebuilds the operator from template
+operator_builder_deps = ['.operator-builder/nodes.pokt.network/']
+local_resource('operator-builder-watch-and-template', "cd .operator-builder && make operator-build", deps=operator_builder_deps)
 
-local_resource('Operator: CRDs', "make manifests; make install", deps=["api"])
+### Builds and updates the operator binary on cluster
+kubebuilder_deps = ['controllers', 'main.go', 'api', 'internal']
+local_resource('kubebuilder-watch-and-compile', "make generate; GOOS=linux go build -o bin/manager main.go" + copy_samples(), deps=kubebuilder_deps, ignore=['*/*/zz_generated.deepcopy.go'])
 
-k8s_yaml(yaml())
-
-deps = ['controllers', 'main.go']
-deps.append('api')
-deps.append('internal')
-
-local_resource('Operator: Watch & Compile', "make generate; " + binary() , deps=deps, ignore=['*/*/zz_generated.deepcopy.go'])
+local_resource('operator-builder-maintain-samples', "cd .operator-builder && make operator-samples", deps=['.operator-builder/samples/'])
 
 docker_build_with_restart(IMAGE_NAME, '.',
     dockerfile_contents=DOCKERFILE,

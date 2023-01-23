@@ -57,7 +57,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: postgres-credentials # +operator-builder:field:name=postgres.password.secretKeyRef.name,type=string
-                  key: password # +operator-builder:field:name=postgres.password.secretKeyRef.key,type=string
+                  key: postgres-password # +operator-builder:field:name=postgres.password.secretKeyRef.key,type=string
               # TODO(@okdas): switch to `valueFrom`, which allows for a secretKeyRef and configMapKeyRef
             - name: POSTGRES_HOST
               value: postgres-host # +operator-builder:field:name=postgres.host,type=string
@@ -77,8 +77,8 @@ spec:
             - name: genesis-volume
               mountPath: /genesis.json
               subPath: genesis.json
-            - name: name-blockstore # +operator-builder:field:parent=metadata.name,replace="name",type=string
-              mountPath: /blockstore
+            - name: validator-storage # +operator-builder:field:parent=metadata.name,replace="name",type=string
+              mountPath: /validator-storage
       volumes:
         - name: config-volume
           configMap:
@@ -88,7 +88,7 @@ spec:
             name: name-genesis # +operator-builder:collection:field:parent=metadata.name,replace="name",type=string
   volumeClaimTemplates:
     - metadata:
-        name: name-blockstore # +operator-builder:field:parent=metadata.name,replace="name",type=string
+        name: validator-storage # +operator-builder:field:parent=metadata.name,replace="name",type=string
       spec:
         accessModes: ["ReadWriteOnce"]
         resources:
@@ -106,8 +106,12 @@ spec:
   ports:
     - port: 8080 # +operator-builder:field:name=ports.consensus,type=int,default=8080
       name: consensus
+      protocol: TCP
+      targetPort: consensus
     - port: 50832 # +operator-builder:field:name=ports.rpc,type=int,default=50832
       name: rpc
+      protocol: TCP
+      targetPort: rpc
   selector:
     app: v1-validator1 # +operator-builder:field:parent=metadata.name,type=string
 ---
@@ -121,10 +125,8 @@ data:
   # +operator-builder:field:name=ports.rpc,type=int,replace="rpc_port_value",default="50832"
   config.json: |
     {
-      "base": {
-        "root_directory": "/go/src/github.com/pocket-network",
-        "private_key": ""
-      },
+      "root_directory": "/go/src/github.com/pocket-network",
+      "private_key": "",
       "consensus": {
         "max_mempool_bytes": 500000000,
         "pacemaker_config": {
@@ -141,18 +143,30 @@ data:
       "persistence": {
         "postgres_url": "",
         "node_schema": "validator",
-        "block_store_path": "/blockstore"
+        "block_store_path": "/validator-storage/blockstore",
+        "tx_indexer_path": "",
+        "trees_store_dir": "/validator-storage/trees",
+        "max_conns_count": 8,
+        "min_conns_count": 0,
+        "max_conn_lifetime": "1h",
+        "max_conn_idle_time": "30m",
+        "health_check_period": "5m"
       },
       "p2p": {
         "consensus_port": consensus_port_value,
         "use_rain_tree": true,
         "is_empty_connection_type": false,
-        "private_key": ""
+        "private_key": "",
+        "max_mempool_count": 100000
       },
       "telemetry": {
         "enabled": true,
         "address": "0.0.0.0:9000",
         "endpoint": "/metrics"
+      },
+      "logger": {
+        "level": "debug",
+        "format": "json"
       },
       "rpc": {
         "enabled": true,

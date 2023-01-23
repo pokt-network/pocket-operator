@@ -33,6 +33,27 @@ and delete pocket nodes using custom resources.
 This operator was built with
 [operator-builder](https://github.com/nukleros/operator-builder).
 
+# ⚠️ Under active development
+
+We are currently working on the first release of the operator. That means the API and CRD are subject to change - in fact they most certainly are going to be changed. We will be updating this README as we make progress. Not production ready. Expect issues.
+
+## Installation
+
+We provide kustomize manifests for deploying the operator. To create manifests to deploy the latest version of operator, run the following command:
+
+```
+kustomize build "https://github.com/pokt-network/pocket-operator//config/default?ref=master"
+```
+
+## Usage
+
+Please see the supported Custom Resource Definitions (CRDs) in the [config/crd](config/crd) directory.
+
+We do not ship Postgres database with this operator, it is up to a user to choose a way to run the database. We suggest to utilize Postgres Operators such as [CrunchyData](https://github.com/CrunchyData/postgres-operator) or [zalando's postgres-operator](https://github.com/zalando/postgres-operator) for that purpose due to additional availability guarantees (replications, backups, etc). We do have an example in the [config/samples](config/samples) directory for one non-replicated Postgres deployment. Once this product matures, we are going to publish a step-by-step guide with a recommended way to deploy postgres operators.
+
+Examples can be found in the [config/samples](config/samples) directory.
+
+
 ## Local Development & Testing
 
 To install the custom resource/s for this operator, make sure you have a
@@ -55,19 +76,7 @@ terminal.
 kubectl apply -f config/samples
 ```
 
-Give the validators some time to come up.  The validator nodes will go into a
-crashloop.  First because the database pod is not yet up, and then because it is
-failing password authentication when connecting to the DB.  This is a issue that
-will be fixed soon.  In the meantime, we have a workaround.
-
-Stop the controller by hitting Ctrl-C in the terminal where you ran `make run`.
-Then run the following commands.
-
-```bash
-cd .operator-builder/hack
-for v in $(cat validators); do ./update-db-pass.sh $v; done
-for v in $(cat validators); do kubectl delete po $v-0; done
-```
+Give the validators some time to come up.  The validator nodes will go into a crashloop if database is not yet available, but will restart and retry.
 
 Run the dev client in the pocket client container.  See the [pocket development
 docs](https://github.com/pokt-network/pocket/tree/main/docs/development#running-localnet)
@@ -90,20 +99,13 @@ The following steps will re-generate the codebase from scratch after making
 changes to the configurations, source manifests and/or markers.
 
 *Caution*: These steps will permanently delete any changes you have made
-directly to the codebase.
-
-Delete the existing codebase.
-
-```bash
-cd .operator-builder
-make operator-clean
-```
+directly to the codebase that is being provisioned by operator-builder.
 
 Re-build the codebase from the existing configurations and source manifests.
 
 ```bash
-make operator-init
-make operator-create
+cd .opertator-builder
+make operator-build
 ```
 
 Install the dependencies (postgres operator) in your test cluster.
@@ -167,7 +169,7 @@ message with the following.
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://github.com/pokt-network/repo-template/blob/master/CONTRIBUTING.md) for details on contributions and the process of submitting pull requests.
+Please read [CONTRIBUTING.md](https://github.com/pokt-network/pocket-operator/blob/master/CONTRIBUTING.md) for details on contributions and the process of submitting pull requests.
 
 ## Support & Contact
 

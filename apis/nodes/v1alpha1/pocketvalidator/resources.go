@@ -1,5 +1,5 @@
 /*
-Copyright 2022.
+Copyright 2023.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ spec:
     password:
       secretKeyRef:
         name: "postgres-credentials"
-        key: "password"
+        key: "postgres-password"
     host: "postgres-host"
     port: "5432"
     database: "validatordb"
@@ -82,7 +82,7 @@ spec:
     password:
       secretKeyRef:
         name: "postgres-credentials"
-        key: "password"
+        key: "postgres-password"
     host: "postgres-host"
     port: "5432"
 `
