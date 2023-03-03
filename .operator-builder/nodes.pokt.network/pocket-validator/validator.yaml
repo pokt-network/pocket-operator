@@ -28,10 +28,12 @@ spec:
             - -config=/configs/config.json
             - -genesis=/genesis.json
           ports:
-            - containerPort: 8080 # +operator-builder:field:name=ports.consensus,type=int,default=8080
+            - containerPort: 42069 # +operator-builder:field:name=ports.consensus,type=int,default=42069
               name: consensus
             - containerPort: 50832 # +operator-builder:field:name=ports.rpc,type=int,default=50832
               name: rpc
+            - containerPort: 9000 # +operator-builder:field:name=ports.metrics,type=int,default=9000
+              name: metrics
           env:
             - name: POCKET_BASE_PRIVATE_KEY
               valueFrom:
@@ -104,7 +106,7 @@ metadata:
     app: v1-validator1 # +operator-builder:field:parent=metadata.name,type=string
 spec:
   ports:
-    - port: 8080 # +operator-builder:field:name=ports.consensus,type=int,default=8080
+    - port: 42069 # +operator-builder:field:name=ports.consensus,type=int,default=42069
       name: consensus
       protocol: TCP
       targetPort: consensus
@@ -112,6 +114,10 @@ spec:
       name: rpc
       protocol: TCP
       targetPort: rpc
+    - port: 9000 # +operator-builder:field:name=ports.metrics,type=int,default=9000
+      name: metrics
+      protocol: TCP
+      targetPort: metrics
   selector:
     app: v1-validator1 # +operator-builder:field:parent=metadata.name,type=string
 ---
@@ -121,12 +127,14 @@ metadata:
   name: name-config # +operator-builder:field:parent=metadata.name,type=string,replace="name"
   namespace: default # +operator-builder:collection:field:parent=metadata.name,type=string
 data:
-  # +operator-builder:field:name=ports.consensus,type=int,replace="consensus_port_value",default="8080"
+  # +operator-builder:field:name=ports.consensus,type=int,replace="consensus_port_value",default="42069"
   # +operator-builder:field:name=ports.rpc,type=int,replace="rpc_port_value",default="50832"
+  # +operator-builder:field:parent=metadata.name,type=string,replace="hostname_svc"
   config.json: |
     {
       "root_directory": "/go/src/github.com/pocket-network",
       "private_key": "",
+      "use_lib_p2p": false,
       "consensus": {
         "max_mempool_bytes": 500000000,
         "pacemaker_config": {
@@ -134,7 +142,8 @@ data:
           "manual": true,
           "debug_time_between_steps_msec": 1000
         },
-        "private_key": ""
+        "private_key": "",
+        "server_mode_enabled": true
       },
       "utility": {
         "max_mempool_transaction_bytes": 1073741824,
@@ -153,7 +162,8 @@ data:
         "health_check_period": "5m"
       },
       "p2p": {
-        "consensus_port": consensus_port_value,
+        "hostname": "hostname_svc",
+        "port": consensus_port_value,
         "use_rain_tree": true,
         "is_empty_connection_type": false,
         "private_key": "",

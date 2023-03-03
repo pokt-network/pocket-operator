@@ -39,8 +39,9 @@ spec:
   prometheusScrape: false
   pocketImage: "ghcr.io/pokt-network/pocket-v1:main-dev"
   ports:
-    consensus: 8080
+    consensus: 42069
     rpc: 50832
+    metrics: 9000
   privateKey:
     secretKeyRef:
       name: "v1-validator1"

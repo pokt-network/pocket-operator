@@ -53,7 +53,6 @@ We do not ship Postgres database with this operator, it is up to a user to choos
 
 Examples can be found in the [config/samples](config/samples) directory.
 
-
 ## Local Development & Testing
 
 To install the custom resource/s for this operator, make sure you have a
