@@ -74,15 +74,20 @@ type PocketValidatorCollectionSpec struct {
 }
 
 type PocketValidatorSpecPorts struct {
-	// +kubebuilder:default=8080
+	// +kubebuilder:default=42069
 	// +kubebuilder:validation:Optional
-	// (Default: 8080)
+	// (Default: 42069)
 	Consensus int `json:"consensus,omitempty"`
 
 	// +kubebuilder:default=50832
 	// +kubebuilder:validation:Optional
 	// (Default: 50832)
 	Rpc int `json:"rpc,omitempty"`
+
+	// +kubebuilder:default=9000
+	// +kubebuilder:validation:Optional
+	// (Default: 9000)
+	Metrics int `json:"metrics,omitempty"`
 }
 
 type PocketValidatorSpecPrivateKey struct {

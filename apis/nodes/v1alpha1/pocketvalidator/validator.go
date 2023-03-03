@@ -85,6 +85,10 @@ func CreateStatefulSetCollectionNameParentName(
 										"containerPort": parent.Spec.Ports.Rpc, //  controlled by field: ports.rpc
 										"name":          "rpc",
 									},
+									map[string]interface{}{
+										"containerPort": parent.Spec.Ports.Metrics, //  controlled by field: ports.metrics
+										"name":          "metrics",
+									},
 								},
 								"env": []interface{}{
 									map[string]interface{}{
@@ -245,6 +249,12 @@ func CreateServiceCollectionNameParentName(
 						"protocol":   "TCP",
 						"targetPort": "rpc",
 					},
+					map[string]interface{}{
+						"port":       parent.Spec.Ports.Metrics, //  controlled by field: ports.metrics
+						"name":       "metrics",
+						"protocol":   "TCP",
+						"targetPort": "metrics",
+					},
 				},
 				"selector": map[string]interface{}{
 					"app": parent.Name, //  controlled by field:
@@ -277,9 +287,11 @@ func CreateConfigMapCollectionNameParentNameConfig(
 			"data": map[string]interface{}{
 				// controlled by field: ports.consensus
 				// controlled by field: ports.rpc
+				// controlled by field:
 				"config.json": `{
   "root_directory": "/go/src/github.com/pocket-network",
   "private_key": "",
+  "use_lib_p2p": false,
   "consensus": {
     "max_mempool_bytes": 500000000,
     "pacemaker_config": {
@@ -287,7 +299,8 @@ func CreateConfigMapCollectionNameParentNameConfig(
       "manual": true,
       "debug_time_between_steps_msec": 1000
     },
-    "private_key": ""
+    "private_key": "",
+    "server_mode_enabled": true
   },
   "utility": {
     "max_mempool_transaction_bytes": 1073741824,
@@ -306,7 +319,8 @@ func CreateConfigMapCollectionNameParentNameConfig(
     "health_check_period": "5m"
   },
   "p2p": {
-    "consensus_port": ` + strconv.Itoa(parent.Spec.Ports.Consensus) + `,
+    "hostname": "` + parent.Name + `",
+    "port": ` + strconv.Itoa(parent.Spec.Ports.Consensus) + `,
     "use_rain_tree": true,
     "is_empty_connection_type": false,
     "private_key": "",
