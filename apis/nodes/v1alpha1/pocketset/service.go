@@ -28,8 +28,8 @@ import (
 
 // +kubebuilder:rbac:groups=core,resources=services,verbs=get;list;watch;create;update;patch;delete
 
-// CreateServiceParentNameParentNameValidators creates the Service resource with name parent.name + -validators.
-func CreateServiceParentNameParentNameValidators(
+// CreateServiceParentNameAllValidators creates the Service resource with name all-validators.
+func CreateServiceParentNameAllValidators(
 	parent *nodesv1alpha1.PocketSet,
 	reconciler workload.Reconciler,
 	req *workload.Request,
@@ -40,27 +40,34 @@ func CreateServiceParentNameParentNameValidators(
 			"apiVersion": "v1",
 			"kind":       "Service",
 			"metadata": map[string]interface{}{
-				"name":      "" + parent.Name + "-validators", //  controlled by field:
-				"namespace": parent.Name,                      //  controlled by field:
+				"name":      "all-validators", //  controlled by field:
+				"namespace": parent.Name,      //  controlled by field:
+				"labels": map[string]interface{}{
+					"scope": "all-validators",
+				},
 			},
 			"spec": map[string]interface{}{
 				"ports": []interface{}{
 					map[string]interface{}{
-						"port": 8221,
-						"name": "pre2p",
+						"port": 42069,
+						"name": "consensus",
 					},
 					map[string]interface{}{
-						"port": 8222,
-						"name": "p2p",
+						"port": 50832,
+						"name": "rpc",
+					},
+					map[string]interface{}{
+						"port": 9000,
+						"name": "metrics",
 					},
 				},
 				"clusterIP": "None",
 				"selector": map[string]interface{}{
-					"v1-purpose": "validator",
+					"purpose": "validator",
 				},
 			},
 		},
 	}
 
-	return mutate.MutateServiceParentNameParentNameValidators(resourceObj, parent, reconciler, req)
+	return mutate.MutateServiceParentNameAllValidators(resourceObj, parent, reconciler, req)
 }
