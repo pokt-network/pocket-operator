@@ -59,8 +59,12 @@ spec:
               ports:
                 properties:
                   consensus:
-                    default: 8080
-                    description: '(Default: 8080)'
+                    default: 42069
+                    description: '(Default: 42069)'
+                    type: integer
+                  metrics:
+                    default: 9000
+                    description: '(Default: 9000)'
                     type: integer
                   rpc:
                     default: 50832

@@ -23,6 +23,8 @@ local_resource('operator-builder-watch-and-template', "cd .operator-builder && m
 kubebuilder_deps = ['controllers', 'main.go', 'api', 'internal']
 local_resource('kubebuilder-watch-and-compile', "make generate; GOOS=linux go build -o bin/manager main.go" + copy_samples(), deps=kubebuilder_deps, ignore=['*/*/zz_generated.deepcopy.go'])
 
+local('cd config/manager && ../../bin/kustomize edit set image controller=ghcr.io/pokt-network/pocket-operator:latest')
+
 local_resource('operator-builder-maintain-samples', "cd .operator-builder && make operator-samples", deps=['.operator-builder/samples/'])
 
 docker_build_with_restart(IMAGE_NAME, '.',

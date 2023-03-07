@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-MOVE_EXCEPTIONS_REGEX="README.md|.gitignore|.dockerignore|^\.$|^\.\.$|^.operator-builder$"
+MOVE_EXCEPTIONS_REGEX="README.md|.gitignore|.dockerignore|Dockerfile|^\.$|^\.\.$|^.operator-builder$"
 
 # due to the way operator-builder works, the directory must be named pocket-operator
 TMP_DIR_PARENT=$(mktemp -d)
