@@ -62,8 +62,8 @@ func CreateStatefulSetCollectionNameParentName(
 							"prometheus.io/port":   "9000",
 						},
 						"labels": map[string]interface{}{
-							"app":        parent.Name, //  controlled by field:
-							"v1-purpose": "validator",
+							"app":     parent.Name, //  controlled by field:
+							"purpose": "validator",
 						},
 					},
 					"spec": map[string]interface{}{

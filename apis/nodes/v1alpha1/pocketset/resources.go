@@ -98,7 +98,7 @@ var CreateFuncs = []func(
 	*workload.Request,
 ) ([]client.Object, error){
 	CreateNamespaceParentName,
-	CreateServiceParentNameParentNameValidators,
+	CreateServiceParentNameAllValidators,
 	CreateConfigMapParentNameParentNameGenesis,
 }
 

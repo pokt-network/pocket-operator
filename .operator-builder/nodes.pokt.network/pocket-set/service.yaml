@@ -1,14 +1,18 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: name-validators  # +operator-builder:field:parent=metadata.name,type=string,replace="name"
+  name: all-validators # +operator-builder:field:parent=metadata.name,type=string,replace="name"
   namespace: default # +operator-builder:field:parent=metadata.name,type=string
+  labels:
+    scope: all-validators
 spec:
   ports:
-    - port: 8221
-      name: pre2p
-    - port: 8222
-      name: p2p
+    - port: 42069
+      name: consensus
+    - port: 50832
+      name: rpc
+    - port: 9000
+      name: metrics
   clusterIP: None
   selector:
-    v1-purpose: validator
+    purpose: validator

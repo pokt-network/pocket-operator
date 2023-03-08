@@ -20,5 +20,6 @@ package constants
 // package to prevent import cycle errors when attempting to reference the names from other
 // packages (e.g. mutate).
 const (
-	NamespaceParentName = "parent.Name"
+	NamespaceParentName            = "parent.Name"
+	ServiceParentNameAllValidators = "all-validators"
 )
