@@ -156,6 +156,10 @@ func CreateStatefulSetCollectionNameParentName(
 										"name":  "POCKET_PERSISTENCE_NODE_SCHEMA",
 										"value": parent.Spec.Postgres.Schema, //  controlled by field: postgres.schema
 									},
+									map[string]interface{}{
+										"name":  "POCKET_P2P_HOSTNAME",
+										"value": parent.Name, //  controlled by field:
+									},
 								},
 								"volumeMounts": []interface{}{
 									map[string]interface{}{
