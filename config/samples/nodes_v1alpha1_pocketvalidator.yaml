@@ -1,36 +1,31 @@
 apiVersion: nodes.pokt.network/v1alpha1
 kind: PocketValidator
 metadata:
-  name: v1-validator1
+  name: pocketvalidator-sample
 spec:
-  collection:
-    name: default
+  #collection:
+    #name: "pocketset-sample"
+    #namespace: ""
+  prometheusScrape: false
   pocketImage: "ghcr.io/pokt-network/pocket-v1:main-dev"
+  ports:
+    consensus: 42069
+    rpc: 50832
+    metrics: 9000
   privateKey:
     secretKeyRef:
-      name: v1-validator1
-      key: private_key
+      name: "v1-validator1"
+      key: "private_key"
   postgres:
     user:
       secretKeyRef:
-        name: pocket-postgres-postgresql
-        key: username
+        name: "postgres-credentials"
+        key: "username"
     password:
       secretKeyRef:
-        name: pocket-postgres-postgresql
-        key: postgres-password
-    host: pocket-postgres-postgresql
+        name: "postgres-credentials"
+        key: "postgres-password"
+    host: "postgres-host"
     port: "5432"
-    database: postgres
-    schema: validator1
-  ports:
-    consensus: 8080
-    rpc: 50832
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: v1-validator1
-type: Opaque
-stringData:
-  private_key: "6fd0bc54cc2dd205eaf226eebdb0451629b321f11d279013ce6fdd5a33059256b2eda2232ffb2750bf761141f70f75a03a025f65b2b2b417c7f8b3c9ca91e8e4"
+    database: "validatordb"
+    schema: "v1-validator1"
