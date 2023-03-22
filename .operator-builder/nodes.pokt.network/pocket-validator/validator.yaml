@@ -74,7 +74,9 @@ spec:
             - name: POCKET_PERSISTENCE_NODE_SCHEMA
               value: v1-validator1 # +operator-builder:field:name=postgres.schema,type=string,default="v1-validator1"
             - name: POCKET_P2P_HOSTNAME
-              value: v1-validator1 # +operator-builder:field:parent=metadata.name,type=string
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
           volumeMounts:
             - name: config-volume
               mountPath: /configs
