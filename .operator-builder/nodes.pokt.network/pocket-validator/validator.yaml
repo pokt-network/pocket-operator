@@ -20,6 +20,21 @@ spec:
         app: v1-validator1 # +operator-builder:field:parent=metadata.name,type=string
         purpose: validator
     spec:
+      initContainers:
+        - name: wait-for-postgres
+          image: busybox
+          command:
+            [
+              "sh",
+              "-c",
+              "until nc -z $(POSTGRES_HOST) $(POSTGRES_PORT); do echo waiting for postgres...; sleep 2; done;",
+            ]
+          env:
+            - name: POSTGRES_HOST
+              value: postgres-host # +operator-builder:field:name=postgres.host,type=string
+              # TODO(@okdas): switch to `valueFrom`, which allows for a secretKeyRef and configMapKeyRef
+            - name: POSTGRES_PORT
+              value: "5432" # +operator-builder:field:name=postgres.port,type=string
       containers:
         - name: pocket-validator
           image: ghcr.io/pokt-network/pocket-v1:main-dev # +operator-builder:field:name=pocketImage,type=string

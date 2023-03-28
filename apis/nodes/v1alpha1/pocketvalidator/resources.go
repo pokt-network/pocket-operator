@@ -37,6 +37,19 @@ spec:
     #name: "pocketset-sample"
     #namespace: ""
   prometheusScrape: false
+  postgres:
+    host: "postgres-host"
+    port: "5432"
+    user:
+      secretKeyRef:
+        name: "postgres-credentials"
+        key: "username"
+    password:
+      secretKeyRef:
+        name: "postgres-credentials"
+        key: "postgres-password"
+    database: "validatordb"
+    schema: "v1-validator1"
   pocketImage: "ghcr.io/pokt-network/pocket-v1:main-dev"
   ports:
     consensus: 42069
@@ -46,19 +59,6 @@ spec:
     secretKeyRef:
       name: "v1-validator1"
       key: "private_key"
-  postgres:
-    user:
-      secretKeyRef:
-        name: "postgres-credentials"
-        key: "username"
-    password:
-      secretKeyRef:
-        name: "postgres-credentials"
-        key: "postgres-password"
-    host: "postgres-host"
-    port: "5432"
-    database: "validatordb"
-    schema: "v1-validator1"
 `
 
 // samplePocketValidatorRequired is a sample containing only required fields
@@ -70,12 +70,9 @@ spec:
   #collection:
     #name: "pocketset-sample"
     #namespace: ""
-  pocketImage: "ghcr.io/pokt-network/pocket-v1:main-dev"
-  privateKey:
-    secretKeyRef:
-      name: "v1-validator1"
-      key: "private_key"
   postgres:
+    host: "postgres-host"
+    port: "5432"
     user:
       secretKeyRef:
         name: "postgres-credentials"
@@ -84,8 +81,11 @@ spec:
       secretKeyRef:
         name: "postgres-credentials"
         key: "postgres-password"
-    host: "postgres-host"
-    port: "5432"
+  pocketImage: "ghcr.io/pokt-network/pocket-v1:main-dev"
+  privateKey:
+    secretKeyRef:
+      name: "v1-validator1"
+      key: "private_key"
 `
 
 // Sample returns the sample manifest for this custom resource.
