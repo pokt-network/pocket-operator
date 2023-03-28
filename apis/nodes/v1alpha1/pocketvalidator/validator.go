@@ -67,6 +67,27 @@ func CreateStatefulSetCollectionNameParentName(
 						},
 					},
 					"spec": map[string]interface{}{
+						"initContainers": []interface{}{
+							map[string]interface{}{
+								"name":  "wait-for-postgres",
+								"image": "busybox",
+								"command": []interface{}{
+									"sh",
+									"-c",
+									"until nc -z $(POSTGRES_HOST) $(POSTGRES_PORT); do echo waiting for postgres...; sleep 2; done;",
+								},
+								"env": []interface{}{
+									map[string]interface{}{
+										"name":  "POSTGRES_HOST",
+										"value": parent.Spec.Postgres.Host, //  controlled by field: postgres.host
+									},
+									map[string]interface{}{
+										"name":  "POSTGRES_PORT",
+										"value": parent.Spec.Postgres.Port, //  controlled by field: postgres.port
+									},
+								},
+							},
+						},
 						"containers": []interface{}{
 							map[string]interface{}{
 								"name":  "pocket-validator",
@@ -155,6 +176,14 @@ func CreateStatefulSetCollectionNameParentName(
 									map[string]interface{}{
 										"name":  "POCKET_PERSISTENCE_NODE_SCHEMA",
 										"value": parent.Spec.Postgres.Schema, //  controlled by field: postgres.schema
+									},
+									map[string]interface{}{
+										"name": "POCKET_P2P_HOSTNAME",
+										"valueFrom": map[string]interface{}{
+											"fieldRef": map[string]interface{}{
+												"fieldPath": "status.podIP",
+											},
+										},
 									},
 								},
 								"volumeMounts": []interface{}{

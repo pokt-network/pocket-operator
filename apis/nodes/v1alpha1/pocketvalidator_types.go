@@ -48,6 +48,9 @@ type PocketValidatorSpec struct {
 	// (Default: false)
 	PrometheusScrape bool `json:"prometheusScrape,omitempty"`
 
+	// +kubebuilder:validation:Optional
+	Postgres PocketValidatorSpecPostgres `json:"postgres,omitempty"`
+
 	// +kubebuilder:validation:Required
 	PocketImage string `json:"pocketImage,omitempty"`
 
@@ -56,9 +59,6 @@ type PocketValidatorSpec struct {
 
 	// +kubebuilder:validation:Optional
 	PrivateKey PocketValidatorSpecPrivateKey `json:"privateKey,omitempty"`
-
-	// +kubebuilder:validation:Optional
-	Postgres PocketValidatorSpecPostgres `json:"postgres,omitempty"`
 }
 
 type PocketValidatorCollectionSpec struct {
@@ -73,48 +73,18 @@ type PocketValidatorCollectionSpec struct {
 	Namespace string `json:"namespace"`
 }
 
-type PocketValidatorSpecPorts struct {
-	// +kubebuilder:default=42069
-	// +kubebuilder:validation:Optional
-	// (Default: 42069)
-	Consensus int `json:"consensus,omitempty"`
-
-	// +kubebuilder:default=50832
-	// +kubebuilder:validation:Optional
-	// (Default: 50832)
-	Rpc int `json:"rpc,omitempty"`
-
-	// +kubebuilder:default=9000
-	// +kubebuilder:validation:Optional
-	// (Default: 9000)
-	Metrics int `json:"metrics,omitempty"`
-}
-
-type PocketValidatorSpecPrivateKey struct {
-	// +kubebuilder:validation:Optional
-	SecretKeyRef PocketValidatorSpecPrivateKeySecretKeyRef `json:"secretKeyRef,omitempty"`
-}
-
-type PocketValidatorSpecPrivateKeySecretKeyRef struct {
-	// +kubebuilder:validation:Required
-	Name string `json:"name,omitempty"`
-
-	// +kubebuilder:validation:Required
-	Key string `json:"key,omitempty"`
-}
-
 type PocketValidatorSpecPostgres struct {
-	// +kubebuilder:validation:Optional
-	User PocketValidatorSpecPostgresUser `json:"user,omitempty"`
-
-	// +kubebuilder:validation:Optional
-	Password PocketValidatorSpecPostgresPassword `json:"password,omitempty"`
-
 	// +kubebuilder:validation:Required
 	Host string `json:"host,omitempty"`
 
 	// +kubebuilder:validation:Required
 	Port string `json:"port,omitempty"`
+
+	// +kubebuilder:validation:Optional
+	User PocketValidatorSpecPostgresUser `json:"user,omitempty"`
+
+	// +kubebuilder:validation:Optional
+	Password PocketValidatorSpecPostgresPassword `json:"password,omitempty"`
 
 	// +kubebuilder:default="validatordb"
 	// +kubebuilder:validation:Optional
@@ -146,6 +116,36 @@ type PocketValidatorSpecPostgresPassword struct {
 }
 
 type PocketValidatorSpecPostgresPasswordSecretKeyRef struct {
+	// +kubebuilder:validation:Required
+	Name string `json:"name,omitempty"`
+
+	// +kubebuilder:validation:Required
+	Key string `json:"key,omitempty"`
+}
+
+type PocketValidatorSpecPorts struct {
+	// +kubebuilder:default=42069
+	// +kubebuilder:validation:Optional
+	// (Default: 42069)
+	Consensus int `json:"consensus,omitempty"`
+
+	// +kubebuilder:default=50832
+	// +kubebuilder:validation:Optional
+	// (Default: 50832)
+	Rpc int `json:"rpc,omitempty"`
+
+	// +kubebuilder:default=9000
+	// +kubebuilder:validation:Optional
+	// (Default: 9000)
+	Metrics int `json:"metrics,omitempty"`
+}
+
+type PocketValidatorSpecPrivateKey struct {
+	// +kubebuilder:validation:Optional
+	SecretKeyRef PocketValidatorSpecPrivateKeySecretKeyRef `json:"secretKeyRef,omitempty"`
+}
+
+type PocketValidatorSpecPrivateKeySecretKeyRef struct {
 	// +kubebuilder:validation:Required
 	Name string `json:"name,omitempty"`
 
